@@ -1,0 +1,48 @@
+.container {
+  margin: 2rem;
+}
+
+.persons {
+  display: flex;
+  flex-direction: column;
+}
+
+.person {
+  display: flex;
+}
+
+.person--name {
+  display: inline-flex;
+  width: 140px;
+}
+
+.label {
+  width: 140px;
+  display: inline-flex;
+}
+
+.input {
+  border: 1px solid #9393fb;
+  border-radius: 4px;
+  padding: 7px;
+  margin: 0 0 15px 0;
+}
+
+.button {
+  background: #9393fb;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 7px 10px;
+  margin: 0 0 0 17.5rem;
+}
+
+button:hover {
+  background: #a6a6ff;
+}
+
+h1,
+h2 {
+  font-size: 1.5rem;
+  margin: 1rem 0 0.5rem 0;
+}

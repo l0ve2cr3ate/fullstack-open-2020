@@ -1,0 +1,17 @@
+.countryName {
+  display: inline-flex;
+  width: 200px;
+}
+
+.button {
+  background: #00bcd4;
+  border: none;
+  border-radius: 5px;
+  padding: 7px 10px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #29cfe4;
+}

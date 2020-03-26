@@ -1,0 +1,8 @@
+.country {
+  display: flex;
+  flex-direction: column;
+}
+
+.countryFlag {
+  margin: 25px 0 0 0;
+}

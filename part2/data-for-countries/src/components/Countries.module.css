@@ -1,0 +1,10 @@
+.message {
+  margin: 15px 0 0 0;
+}
+
+.countries {
+  margin: 25px 0 0 0;
+
+  display: flex;
+  flex-direction: column;
+}

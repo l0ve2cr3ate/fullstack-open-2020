@@ -1,0 +1,9 @@
+.label {
+  padding: 0 10px 0 0;
+}
+
+.input {
+  border: 1px solid #00bcd4;
+  border-radius: 5px;
+  padding: 3px;
+}

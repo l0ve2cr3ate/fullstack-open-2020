@@ -24,7 +24,7 @@ const Form = ({
       onChange={handleNumberChange}
     />
     <div>
-      <button className="button" type="submit">
+      <button className="button submit" type="submit">
         Add
       </button>
     </div>

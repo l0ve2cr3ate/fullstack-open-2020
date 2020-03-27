@@ -14,7 +14,15 @@ Expand your application by allowing users to add phone numbers to the phone book
 Implement a search field that can be used to filter the list of people by name.
 Store the initial state of the application in the file db.json. Modify the application such that the initial state of the data is fetched from the server using the axios-library. Complete the fetching with an Effect hook.
 
-More info about the exercises can be found here: https://fullstackopen.com/en/part2/forms and https://fullstackopen.com/en/part2/getting_data_from_server
+Currently the numbers that are added to the phonebook are not saved to a backend server. Fix this situation.
+Extract the code that handles the communication with the backend into its own module.
+Make it possible for users to delete entries from the phonebook. The deletion can be done through a dedicated button for each person in the phonebook list. You can confirm the action from the user by using the window.confirm method.
+Change the functionality so that if a number is added to an already existing user, the new number will replace the old number.
+
+Show a notification that lasts for a few seconds after a successful operation is executed (a person is added or a number is changed).
+Open your application in two browsers. If you delete a person in browser 1 a short while before attempting to change the person's phone number in browser 2, you will get an error message in the console. Show the user a message when the operation does not succeed.
+
+More info about the exercises can be found here: https://fullstackopen.com/en/part2/forms and https://fullstackopen.com/en/part2/getting_data_from_server and https://fullstackopen.com/en/part2/altering_data_in_server and https://fullstackopen.com/en/part2/adding_styles_to_react_app
 
 ### Notes part2 Getting data from the server
 

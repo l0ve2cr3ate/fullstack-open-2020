@@ -1,4 +1,4 @@
-POST  http://localhost:3001/api/persons
+POST  https://phonebook-backend-2020.herokuapp.com/api/persons
 Content-Type: application/json
 
 {

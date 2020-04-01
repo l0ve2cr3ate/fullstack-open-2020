@@ -28,6 +28,8 @@ let persons = [
 
 app.use(cors());
 
+app.use(express.static("build"));
+
 // Configure morgan to log body of POST request
 morgan.token("person", (req, res) => {
   if (req.method === "POST") return JSON.stringify(req.body);

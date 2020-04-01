@@ -1,8 +1,7 @@
 ### Solutions for part2 phonebook.
 
 In order to run the code, run the following 2 commands:
-`npm start` (for the front-end)  
-`npm run server` (for the data fetching from json-server)
+`npm start` (for the front-end)
 
 Exercises of part2 are divided in subparts. You can find the solutions for every subpart in their respective folder.
 

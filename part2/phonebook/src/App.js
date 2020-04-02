@@ -121,6 +121,9 @@ const App = () => {
         //Update state --> filter out deleted person
         const filteredPersons = persons.filter(person => person.id !== id);
         setPersons(filteredPersons);
+
+        // reset filter
+        setFilter("");
       });
     }
   };

@@ -9,7 +9,8 @@ To run the server locally in development mode, runt the command: `npm run dev`
 
 You can find the deployed server here: https://phonebook-backend-2020.herokuapp.com/api/persons
 
-If you want to deploy a subdirectory to heroku you can use the following commands:
+If you want to deploy a subdirectory to heroku you can use the following commands (don't forget to commit
+your code first) from the root directory:
 `npm install -g heroku`
 `heroku login`
 `heroku git:remote -a phonebook-backend-2020` (where phonebook-backend-2020 is the name of your heroku app)
@@ -21,6 +22,8 @@ https://medium.com/@shalandy/deploy-git-subdirectory-to-heroku-ea05e95fce1f
 Command to copy frontend build directory to phonebook-backend
 `cd part2/phonebook`
 `cp -r build ../../part3/phonebook-backend`
+or in part3/phonebook-backend run the command
+`npm run build:ui`
 
 ### Exercise part3 phonebook-backend
 

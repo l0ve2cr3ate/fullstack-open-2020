@@ -78,7 +78,7 @@ app.delete("/api/persons/:id", (req, res) => {
 });
 
 app.post("/api/persons", (req, res) => {
-  const generateId = () => (Math.random() * 10000).toFixed(0);
+  const generateId = () => Number((Math.random() * 10000).toFixed(0));
   const { body } = req;
 
   // Error handling

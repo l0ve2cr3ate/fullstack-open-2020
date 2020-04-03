@@ -16,22 +16,22 @@ const App = () => {
 
   // Fetch person data from json-server
   useEffect(() => {
-    personService.getAll().then(initialPersons => {
+    personService.getAll().then((initialPersons) => {
       setPersons(initialPersons);
     });
   }, []);
 
-  const handleNameChange = event => {
+  const handleNameChange = (event) => {
     setNewName(event.target.value);
   };
 
-  const handleNumberChange = event => {
+  const handleNumberChange = (event) => {
     setNewNumber(event.target.value);
   };
 
-  const handleFilter = event => {
+  const handleFilter = (event) => {
     setFilter(event.target.value);
-    const filtered = persons.filter(person =>
+    const filtered = persons.filter((person) =>
       // Check if the search term is included in the names in the phonebook
       person.name.toLowerCase().includes(event.target.value.toLowerCase())
     );
@@ -40,15 +40,15 @@ const App = () => {
   };
 
   // submit form
-  const addPerson = event => {
+  const addPerson = (event) => {
     event.preventDefault();
     const newPerson = {
       name: newName,
-      number: newNumber
+      number: newNumber,
     };
 
     // Check if person is already added to the phoneboook.
-    const alreadyExists = persons.some(person => person.name === newName);
+    const alreadyExists = persons.some((person) => person.name === newName);
 
     // No name provided --> could be handled by displaying an error
     // For now do nothing.
@@ -57,7 +57,7 @@ const App = () => {
     }
 
     if (alreadyExists) {
-      const person = persons.find(p => p.name === newName);
+      const person = persons.find((p) => p.name === newName);
       const changedPerson = { ...person, number: newNumber };
       const { id } = person;
 
@@ -68,29 +68,37 @@ const App = () => {
       if (confirmUpdate) {
         personService
           .update(id, changedPerson)
-          .then(returnedPerson => {
+          .then((returnedPerson) => {
             // Update number in state
             setPersons(
-              persons.map(person =>
+              persons.map((person) =>
                 person.id !== id ? person : returnedPerson
               )
             );
 
             setNotificationMessage({
-              notification: `Updated number for ${person.name}`
+              notification: `Updated number for ${person.name}`,
             });
             setTimeout(() => {
               setNotificationMessage(null);
             }, 5000);
           })
-          .catch(error => {
-            setNotificationMessage({
-              error: `Information for ${person.name} has already been removed from server`
-            });
-            setPersons(persons.filter(p => p.id !== id));
-            setTimeout(() => {
-              setNotificationMessage(null);
-            }, 5000);
+          .catch((error) => {
+            // Handle trying to update with to short number
+            if (error.response.data) {
+              setNotificationMessage(error.response.data);
+              setTimeout(() => {
+                setNotificationMessage(null);
+              }, 5000);
+            } else {
+              setNotificationMessage({
+                error: `Information for ${person.name} has already been removed from server`,
+              });
+              setPersons(persons.filter((p) => p.id !== id));
+              setTimeout(() => {
+                setNotificationMessage(null);
+              }, 5000);
+            }
           });
       }
       // clear input fields
@@ -99,27 +107,38 @@ const App = () => {
       return;
     }
 
-    personService.create(newPerson).then(returnedPerson => {
-      setPersons(persons.concat(returnedPerson));
+    personService
+      .create(newPerson)
+      .then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
 
-      setNotificationMessage({ notification: `Added ${returnedPerson.name}` });
-      setTimeout(() => {
-        setNotificationMessage(null);
-      }, 5000);
+        setNotificationMessage({
+          notification: `Added ${returnedPerson.name}`,
+        });
+        setTimeout(() => {
+          setNotificationMessage(null);
+        }, 5000);
 
-      // clear input fields
-      setNewName("");
-      setNewNumber("");
-    });
+        // clear input fields
+        setNewName("");
+        setNewNumber("");
+      })
+      .catch((error) => {
+        setNotificationMessage(error.response.data);
+        setTimeout(() => {
+          setNotificationMessage(null);
+        }, 5000);
+        console.log(error.response.data);
+      });
   };
 
-  const handleDelete = id => {
-    const person = persons.find(p => p.id === id);
+  const handleDelete = (id) => {
+    const person = persons.find((p) => p.id === id);
     const confirmDelete = window.confirm(`Delete ${person.name}?`);
     if (confirmDelete) {
       personService.deletePerson(id).then(() => {
         //Update state --> filter out deleted person
-        const filteredPersons = persons.filter(person => person.id !== id);
+        const filteredPersons = persons.filter((person) => person.id !== id);
         setPersons(filteredPersons);
 
         // reset filter

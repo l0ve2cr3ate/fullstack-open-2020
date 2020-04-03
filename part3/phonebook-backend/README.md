@@ -5,15 +5,17 @@ Your node version should be at least v10.18.0 (check with node -v)
 In order to start the server locally, run the command: `npm start`
 To run the server locally in development mode, runt the command: `npm run dev`
 
-#### Deployed server
+#### Deployed server/app
 
-You can find the deployed server here: https://phonebook-backend-2020.herokuapp.com/api/persons
+You can find the deployed server (with frontend) here: https://phonebook-backend-2020.herokuapp.com/
 
 If you want to deploy a subdirectory to heroku you can use the following commands (don't forget to commit
 your code first) from the root directory:
 `npm install -g heroku`
 `heroku login`
 `heroku git:remote -a phonebook-backend-2020` (where phonebook-backend-2020 is the name of your heroku app)
+`heroku config:set`
+`MONGODB_URI=hereyourmongouri`
 `git subtree push --prefix part3/phonebook-backend heroku master` (where part3/phonebook-backend is path/to/subdirectory)
 
 You can find more info about it here:
@@ -25,7 +27,7 @@ Command to copy frontend build directory to phonebook-backend
 or in part3/phonebook-backend run the command
 `npm run build:ui`
 
-### Exercise part3 phonebook-backend
+### Exercises part3 phonebook-backend
 
 Implement a Node application that returns a hardcoded list of phonebook entries from the address http://localhost:3001/api/persons  
 Implement a page at the address http://localhost:3001/info. The page has to show the time that the request was received and how many entries are in the phonebook at the time of processing the request.  
@@ -45,7 +47,21 @@ Deploy the backend to the internet, for example to Heroku.
 Generate a production build of your frontend, and add it to the internet application.
 Also make sure that the frontend still works locally.
 
-For more info about the exercises for part3 phonebook-backend: https://fullstackopen.com/en/part3/node_js_and_express and https://fullstackopen.com/en/part3/deploying_app_to_internet
+Create a cloud-based MongoDB database for the phonebook application with MongoDB Atlas. You use the program by passing three command-line arguments (the first is the password, the 2nd the name and the 3rd the number). The app will response by printing: added {name} {number} to phonebook, and storing the data to the db. When only the password is given as an argument the program should display all of the entries in the phonebook.
+
+Change the fetching of all phonebook entries so that the data is fetched from the database.
+Change the backend so that new numbers are saved to the database.
+Change the backend so that deleting phonebook entries is reflected in the database.
+Move the error handling of the application to a new error handler middleware.
+If the user tries to create a new phonebook entry for a person whose name is already in the phonebook, the frontend will try to update the phone number of the existing entry by making an HTTP PUT request to the entry's unique URL. Modify the backend to support this request.
+Also update the handling of the api/persons/:id and info routes to use the database.
+
+Add validation to your application, that will make sure that you can only add one number for a person in the phonebook. If an HTTP POST request tries to add a name that is already in the phonebook, the server must respond with an appropriate status code and error message.
+Expand the validation so that the name stored in the database has to be at least three characters long, and the phone number must have at least 8 digits.
+Expand the frontend so that it displays some form of error message when a validation error occurs.
+Generate a new "full stack" version of the application and deploy it to Heroku again.
+
+For more info about the exercises for part3 phonebook-backend: https://fullstackopen.com/en/part3/node_js_and_express and https://fullstackopen.com/en/part3/deploying_app_to_internet and https://fullstackopen.com/en/part3/saving_data_to_mongo_db and https://fullstackopen.com/en/part3/validation_and_es_lint
 
 ### Notes part3 Node.js and Express
 
@@ -78,3 +94,24 @@ Safety and idempotence are recommandations, not (built-in) properties of request
 You use middleware like this:
 `app.use(middlewareName)`
 If you want your middleware functions to be executed before the route event handlers are called, you need to put them above your routes.
+
+### Notes part3 Deploying app to the internet
+
+**Same origin policy and CORS**
+_Cross origin resource sharing_ (CORS) = a mechanism that allows restricted resources on a webpage to be requested from another domain. Certain cross-domain requests are forbidden by default by the same-origin security policy. To allow requests from other origins you need to use CORS middleware.
+
+**Serving static files from the backend**
+To deploy the frontend one van copy the production build to the root of the backend directory and configure the backend to show the frontend's main page using `app.use(express.static('build'))`
+
+### Notes part3 Saving data to MongoDB
+
+MongoDB is a _document-database_, which are categorized under NoSQL db's.
+MongoDB stores _documents_ in _collections_, which are analogous to tables in relational db's.
+Data is stored as BSON objects, a binary representation of JSON documents.
+Mongoose is a _object document mapper_ which helps saving JS objects as Mongo documents.
+
+A _Schema_ maps to a MongoDB collection and defines the shape of documents within the collection. It tells Mongo how to store data. _Models_ are constructors compiled from Schema definitions. An instance of a model is called a _document_. Models are responsible for creating and reading documents.
+Document-db's are _schemaless_: the db itself does not care about the structure of the data that is stored.
+
+Save data --> `.save()`
+Search data --> `.find()`

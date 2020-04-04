@@ -2,8 +2,8 @@ Your node version should be at least v10.18.0 (check with node -v)
 
 ### Solutions for part3 phonebook-backend.
 
-In order to start the server locally, run the command: `npm start`
-To run the server locally in development mode, runt the command: `npm run dev`
+In order to start the server locally, run the command: `npm start`  
+To run the server locally in development mode, run the command: `npm run dev`
 
 #### Deployed server/app
 
@@ -116,3 +116,43 @@ Document-db's are _schemaless_: the db itself does not care about the structure 
 
 Save data --> `.save()`
 Search data --> `.find()`
+
+**Error Handling**
+We need to catch failed promises with `.catch()`, so requests to /api/notes/wrongid are handled correctly.
+There can be 2 kinds of errors:
+
+- id is not in correct Mongo Id format
+- id is not found in db
+
+The first error we catch:
+
+```
+.catch(err => {
+    console.error(err)
+    res.status(400).send({error: 'malformatted id'})
+})
+```
+
+Last error we can fix by checking if Mongo returns a document:
+
+```
+if(note) ...
+else {
+    res.status(404).end()
+}
+```
+
+**Moving errorhandling into middleware**
+`.catch(error => next(error))` --> passes error to errorhandling middleware.
+
+**The order of middleware**
+Order matters, middleware is executed in order that they are loaded into express by `app.use()`
+
+**Other Operations**
+.findByIdAndRemove --> to remove data from db
+.findByIdAndUpdate --> to edit data --> By default the event handler receives the original document,
+without modifications! --> Add `{new: true}` parameter to get the modified document.
+
+### Notes Part3 Validation and ESLint
+
+Mongoose can validate the format of data before it is stored. Add validation rules, like `{required: true, minlength: 3}` to model. mongoose-unique-validator package can be used to check for unique entries.

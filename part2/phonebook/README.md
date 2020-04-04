@@ -2,6 +2,8 @@
 
 In order to run the code, run the following 2 commands:
 `npm start` (for the front-end)
+`cd part3/phonebook-backend`
+`npm run dev` (to start back-end)
 
 Exercises of part2 are divided in subparts. You can find the solutions for every subpart in their respective folder.
 

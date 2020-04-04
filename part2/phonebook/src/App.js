@@ -61,6 +61,17 @@ const App = () => {
       const changedPerson = { ...person, number: newNumber };
       const { id } = person;
 
+      // Error handling for if the updated number is too short.
+      if (newNumber < 8) {
+        setNotificationMessage({
+          error: `${newNumber} is too short, please provide a number with at least 8 digits`,
+        });
+        setTimeout(() => {
+          setNotificationMessage(null);
+        }, 5000);
+        return;
+      }
+
       const confirmUpdate = window.confirm(
         `${newName} is already added to phonebook, replace the old number with a new one?`
       );
@@ -84,21 +95,13 @@ const App = () => {
             }, 5000);
           })
           .catch((error) => {
-            // Handle trying to update with to short number
-            if (error.response.data) {
-              setNotificationMessage(error.response.data);
-              setTimeout(() => {
-                setNotificationMessage(null);
-              }, 5000);
-            } else {
-              setNotificationMessage({
-                error: `Information for ${person.name} has already been removed from server`,
-              });
-              setPersons(persons.filter((p) => p.id !== id));
-              setTimeout(() => {
-                setNotificationMessage(null);
-              }, 5000);
-            }
+            setNotificationMessage({
+              error: `Information for ${person.name} has already been removed from server`,
+            });
+            setPersons(persons.filter((p) => p.id !== id));
+            setTimeout(() => {
+              setNotificationMessage(null);
+            }, 5000);
           });
       }
       // clear input fields
@@ -128,7 +131,6 @@ const App = () => {
         setTimeout(() => {
           setNotificationMessage(null);
         }, 5000);
-        console.log(error.response.data);
       });
   };
 

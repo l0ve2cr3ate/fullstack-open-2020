@@ -14,8 +14,7 @@ your code first) from the root directory:
 `npm install -g heroku`
 `heroku login`
 `heroku git:remote -a phonebook-backend-2020` (where phonebook-backend-2020 is the name of your heroku app)
-`heroku config:set`
-`MONGODB_URI=hereyourmongouri`
+`heroku config:set MONGO_URI=hereyourmongouri`
 `git subtree push --prefix part3/phonebook-backend heroku master` (where part3/phonebook-backend is path/to/subdirectory)
 
 You can find more info about it here:

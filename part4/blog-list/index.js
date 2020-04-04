@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
+const logger = require("./utils/logger");
 
 const blogSchema = mongoose.Schema({
   title: String,
@@ -17,10 +18,10 @@ const mongoUrl = process.env.MONGO_URI;
 mongoose
   .connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
-    console.log("connected to db");
+    logger.info("connected to db");
   })
   .catch((err) => {
-    console.log("Error connecting to db", err.message);
+    logger.error("Error connecting to db", err.message);
   });
 
 app.use(cors());
@@ -42,5 +43,5 @@ app.post("/api/blogs", (request, response) => {
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  logger.info(`Server running on port ${PORT}`);
 });

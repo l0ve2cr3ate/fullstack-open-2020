@@ -60,6 +60,8 @@ Expand the validation so that the name stored in the database has to be at least
 Expand the frontend so that it displays some form of error message when a validation error occurs.
 Generate a new "full stack" version of the application and deploy it to Heroku again.
 
+Add ESlint to your application and fix all the warnings.
+
 For more info about the exercises for part3 phonebook-backend: https://fullstackopen.com/en/part3/node_js_and_express and https://fullstackopen.com/en/part3/deploying_app_to_internet and https://fullstackopen.com/en/part3/saving_data_to_mongo_db and https://fullstackopen.com/en/part3/validation_and_es_lint
 
 ### Notes part3 Node.js and Express

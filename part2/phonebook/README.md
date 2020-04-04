@@ -5,6 +5,8 @@ In order to run the code, run the following 2 commands:
 `cd part3/phonebook-backend`
 `npm run dev` (to start back-end)
 
+You can find the deployed app here: https://phonebook-backend-2020.herokuapp.com/
+
 Exercises of part2 are divided in subparts. You can find the solutions for every subpart in their respective folder.
 
 ### Exercise part2 phonebook

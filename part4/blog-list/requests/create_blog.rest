@@ -1,0 +1,9 @@
+POST  http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Another post",
+    "author": "Author",
+    "url": "/otherurl",
+    "likes": 0
+}

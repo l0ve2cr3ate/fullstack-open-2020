@@ -4,6 +4,7 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const logger = require("./utils/logger");
+const config = require("./utils/config");
 
 const blogSchema = mongoose.Schema({
   title: String,
@@ -14,9 +15,11 @@ const blogSchema = mongoose.Schema({
 
 const Blog = mongoose.model("Blog", blogSchema);
 
-const mongoUrl = process.env.MONGO_URI;
 mongoose
-  .connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(config.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     logger.info("connected to db");
   })
@@ -41,7 +44,7 @@ app.post("/api/blogs", (request, response) => {
   });
 });
 
-const PORT = process.env.PORT;
+const PORT = config.PORT;
 app.listen(PORT, () => {
   logger.info(`Server running on port ${PORT}`);
 });

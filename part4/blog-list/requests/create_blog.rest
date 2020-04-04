@@ -2,8 +2,8 @@ POST  http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Add controllers",
-    "author": "Router",
-    "url": "/controllers",
+    "title": "Test",
+    "author": "Test",
+    "url": "/test",
     "likes": 0
 }

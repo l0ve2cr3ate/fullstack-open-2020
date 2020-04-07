@@ -35,6 +35,11 @@ Write a test that verifies that making an HTTP POST request to the /api/blogs ur
 Write a test that verifies that if the likes property is missing from the request, it will default to the value 0.
 4.12: Blog list tests, step5
 Write a test related to creating new blogs via the /api/blogs endpoint, that verifies that if the title and url properties are missing from the request data, the backend responds to the request with the status code 400 Bad Request.
+Exercises 4.13.-4.14
+4.13 Blog list expansions, step1
+Implement functionality for deleting a single blog post resource. Use the async/await syntax.
+4.14 Blog list expansions, step2
+Implement functionality for updating the information of an individual blog post. Use async/await. The application mostly needs to update the amount of likes for a blog post.
 
 For more info about the exercises for part4 4.1-4.7 blog-list: https://fullstackopen.com/en/part4/structure_of_backend_application_introduction_to_testing
 More info about exercises part4 4.8-4.12 blog-list test can be found: https://fullstackopen.com/en/part4/testing_the_backend
@@ -60,3 +65,26 @@ Describe blocks can be used for grouping of test into logical collections.
 You can run a single test with _only_ method, or by specifying the name of the test with a -t flag.
 
 toBe uses Object.is to test exact equality. If you want to check the value of an object, use toEqual instead.
+
+### b. Testing the backend
+
+Sometimes it can be useful to mock db when testing --> mongo-mock. If you use db for testing, use separate test db.
+_Integration testing_: test multiple components of a system as a group.
+Use a test environment for your tests --> NODE-ENV=test (use cross-env)
+`runInBand` prevents Jest from running tests in parallel.
+_supertest_ --> to test API
+
+**Initializing db before tests**
+Tests should NOT depend on state of db --> reset db and generate test data in controlled manner before running tests --> use `beforeEach`
+
+**Async await**
+--> in order to use await with async operations, they need to return a promise.
+--> await can only be used inside _async_ function.
+
+**Error-handling and async-await**
+--> use try/catch
+--> express-async-errors eliminates need for writing try/catch blocks --> if an exception occurs in async route, error is automatically passed to error handling middleware.
+
+**Optimizing beforeEach function**
+If you have an async `forEach` in your `beforeEach`, `beforeEach` won't wait for `forEach` to finish executing. Await commands in `forEach` are not in `beforeEach` function, but in separate functions, that `beforeEach` won't wait for. Fix --> use `promise.all` to wait for all async operations to be finished.
+`promise.all` transforms array of promises into a single promise that is fulfilled once every promise in the array is resolved. --> executes promises in parallel. If promises need to be executed in particular order, use `for...of`.

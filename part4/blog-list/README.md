@@ -23,7 +23,21 @@ Define a function called mostBlogs that receives an array of blogs as a paramete
 4.7: helper functions and unit tests, step5
 Define a function called mostLikes that receives an array of blogs as its parameter. The function returns the author, whose blog posts have the largest amount of likes.
 
-For more info about the exercises for part4 blog-list: https://fullstackopen.com/en/part4/structure_of_backend_application_introduction_to_testing
+Exercises 4.8.-4.12
+4.8: Blog list tests, step1
+Use the supertest package for writing a test that makes an HTTP GET request to the /api/blogs url.
+Refactor the route handler to use the async/await syntax instead of promises.
+4.9: Blog list tests, step2
+Write a test that verifies that the unique identifier property of the blog posts is named id, by default the database names the property \_id.
+4.10: Blog list tests, step3
+Write a test that verifies that making an HTTP POST request to the /api/blogs url successfully creates a new blog post. Once the test is finished, refactor the operation to use async/await instead of promises.
+4.11: Blog list tests, step4
+Write a test that verifies that if the likes property is missing from the request, it will default to the value 0.
+4.12: Blog list tests, step5
+Write a test related to creating new blogs via the /api/blogs endpoint, that verifies that if the title and url properties are missing from the request data, the backend responds to the request with the status code 400 Bad Request.
+
+For more info about the exercises for part4 4.1-4.7 blog-list: https://fullstackopen.com/en/part4/structure_of_backend_application_introduction_to_testing
+More info about exercises part4 4.8-4.12 blog-list test can be found: https://fullstackopen.com/en/part4/testing_the_backend
 
 ### Notes part4: Testing Express Servers, user administration
 

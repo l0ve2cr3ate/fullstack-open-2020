@@ -197,7 +197,6 @@ describe('deletion of blog', () => {
       url: 'http://dummyurl.com',
     }
 
-    console.log('token', token)
     await api
       .post('/api/blogs')
       .set('Authorization', `Bearer ${token}`)

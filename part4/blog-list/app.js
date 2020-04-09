@@ -6,6 +6,8 @@ const mongoose = require('mongoose')
 const logger = require('./utils/logger')
 const config = require('./utils/config')
 const blogsRouter = require('./controllers/blogs')
+const usersRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
 const middleware = require('./utils/middleware')
 
 mongoose
@@ -13,6 +15,7 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
+    useCreateIndex: true,
   })
   .then(() => {
     logger.info('connected to db')
@@ -23,8 +26,11 @@ mongoose
 
 app.use(cors())
 app.use(express.json())
+app.use(middleware.tokenExtractor)
 app.use(middleware.requestLogger)
 
+app.use('/api/login', loginRouter)
+app.use('/api/users', usersRouter)
 app.use('/api/blogs', blogsRouter)
 
 app.use(middleware.unknownEndpoint)

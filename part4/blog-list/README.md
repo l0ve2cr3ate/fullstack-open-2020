@@ -41,8 +41,28 @@ Implement functionality for deleting a single blog post resource. Use the async/
 4.14 Blog list expansions, step2
 Implement functionality for updating the information of an individual blog post. Use async/await. The application mostly needs to update the amount of likes for a blog post.
 
+Exercises 4.15.-4.22
+4.15: bloglist expansion, step4
+Implement a way to create new users by doing a HTTP POST-request to address api/users. Users have username , password and name. Implement a way to see the details of all users by doing a suitable HTTP request.
+4.16: bloglist expansion, step5
+Add a feature which adds the following restrictions to creating new users: Both username and password must be given. Both username and password must be at least 3 characters long. The username must be unique.
+The operation must respond with a suitable status code and some kind of an error message if invalid user is created. Implement tests which check that invalid users are not created and invalid add user operation returns a suitable status code and error message.
+4.17: bloglist expansion, step6
+Expand blogs so that each blog contains information on the creator of the blog. Modify adding new blogs so that when a new blog is created, any user from the database is designated as its creator. Modify listing all blogs so that the creator's user information is displayed with the blog, and listing all users also displays the blogs created by each user.
+4.18: bloglist expansion, step7
+Implement token-based authentication.
+4.19: bloglist expansion, step8
+Modify adding new blogs so that it is only possible if a valid token is sent with the HTTP POST request.
+4.20: bloglist expansion, step9
+Refactort getToken function to taking the token to a middleware. The middleware should take the token from the Authorization header and place it to the token field of the request object.
+4.21: bloglist expansion, step10
+Change the delete blog operation so that a blog can be deleted only by the user who added the blog.
+4.22: bloglist expansion, step11
+After adding token based authentication the tests for adding a new blog broke. Fix the tests.
+
 For more info about the exercises for part4 4.1-4.7 blog-list: https://fullstackopen.com/en/part4/structure_of_backend_application_introduction_to_testing
-More info about exercises part4 4.8-4.12 blog-list test can be found: https://fullstackopen.com/en/part4/testing_the_backend
+More info about exercises part4 4.8-4.14 blog-list tests and blog-list expansion can be found: https://fullstackopen.com/en/part4/testing_the_backend
+More info about part4 exercises 4.15-4.22 blog-list expansion can be found: https://fullstackopen.com/en/part4/token_authentication
 
 ### Notes part4: Testing Express Servers, user administration
 
@@ -88,3 +108,5 @@ Tests should NOT depend on state of db --> reset db and generate test data in co
 **Optimizing beforeEach function**
 If you have an async `forEach` in your `beforeEach`, `beforeEach` won't wait for `forEach` to finish executing. Await commands in `forEach` are not in `beforeEach` function, but in separate functions, that `beforeEach` won't wait for. Fix --> use `promise.all` to wait for all async operations to be finished.
 `promise.all` transforms array of promises into a single promise that is fulfilled once every promise in the array is resolved. --> executes promises in parallel. If promises need to be executed in particular order, use `for...of`.
+
+Jest `toContain` method --> uses Object.is --> not suited for matching objects. To match objects in array use `toContainEqual` matcher.

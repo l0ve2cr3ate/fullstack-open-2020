@@ -110,3 +110,38 @@ If you have an async `forEach` in your `beforeEach`, `beforeEach` won't wait for
 `promise.all` transforms array of promises into a single promise that is fulfilled once every promise in the array is resolved. --> executes promises in parallel. If promises need to be executed in particular order, use `for...of`.
 
 Jest `toContain` method --> uses Object.is --> not suited for matching objects. To match objects in array use `toContainEqual` matcher.
+
+### c. User Administration
+
+1 to many relationship between User and Note: 1 user can have many notes.
+In a _relational db_ both resources would have separate tables, and the id ot the user who created a note would be stored in the notes table as _foreign key_.
+In _document db's_ there are many different ways of modeling the situation.
+At the moment, notes are saved in notes collection. If we don't want to change this collection, users could be saved in users collection.
+ObjectId's can be used to reference documents in other collections, similar to foreign keys in relational db's. Document db's don't support _join queries_ like relational db's, for aggregating data from multiple tables.
+**References across collections**
+In a relational db the note would have a _reference key_ to the user who created it. In a document db, you can also do this. But _document db's_ don't demand foreign key to be stored in note resources. It could also be stored in users collection, or both. Also possible: nest entire notes array as part of users collection.
+
+Only store hashedPassword in db!
+
+**Populate**
+When HTTP get request is made to /api/users we would like the user object to also contain content of user's notes, not only their id's. In relational db's one would use a _join query_. Mongoose can do a _join_ by doing multiple queries. _Join queries_ in relational db's are _transactional_ --> state of db doesn't change during time query is made. Mongoose join is not transactional, state can change during the query. Mongoose join is done with _populate_.
+
+### d. Token Authentication
+
+Flow:
+
+- user logs in with login form
+- username & password are send to server in POST request to api/login
+- if correct --> server generates token
+- backend responds with status code indicating successful operation + returns token in response
+- browser saves token
+- when user performs operation that needs identification, token is send to server with request
+- server uses token to identify user
+
+status 401: unauthorized --> if user is not found or password or token are incorrect.
+To send token from browser to server --> use Authorization headers.
+
+**Error handling**
+Token verification (with jsonwebtoken) can cause JsonWebTokenError. Token can be faulty, falsified or expired.
+
+If app has multiple interfaces requiring identification --> extract JWT validation into middelware or use express-jwt.

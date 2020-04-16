@@ -1,0 +1,17 @@
+.label {
+  font-size: 1rem;
+  min-width: 100px;
+  display: inline-flex;
+}
+
+.input {
+  border: 1px solid#16d3d8;
+  border-radius: 5px;
+  height: 1.5rem;
+  padding: 0 5px;
+  font-family: Montserrat;
+}
+
+.container {
+  margin: 0.75rem 0;
+}

@@ -1,0 +1,67 @@
+.author {
+  font-size: 12px;
+  color: #313131;
+  margin: 3px 0;
+}
+
+.posted {
+  font-size: 12px;
+}
+
+.title {
+  font-weight: 500;
+  margin: 0 10px 0 0;
+}
+
+.hide {
+  display: none;
+}
+
+.btn {
+  color: #16d3d8;
+  background: none;
+  border: 1px solid #16d3d8;
+  border-radius: 5px;
+  padding: 3px 7px;
+  margin: 0.25rem 0.5rem;
+  font-weight: 700;
+}
+
+.btn:hover {
+  background: none;
+  color: #13b7bb;
+  border: 1px solid #13b7bb;
+}
+
+.removeBtn {
+  background: #f90303;
+  border: none;
+  border-radius: 5px;
+  padding: 3px 7px;
+  color: #fff;
+  font-weight: 700;
+  margin: 0.25rem 0;
+}
+
+.removeBtn:hover {
+  background: #d20000;
+}
+
+.likes,
+.likesText,
+.url {
+  font-size: 14px;
+}
+
+.likes {
+  display: inline-flex;
+  margin: 0 0 0 5px;
+}
+
+.blog {
+  border: 1px solid #16d3d8;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin: 0.5rem 0;
+  max-width: 600px;
+}

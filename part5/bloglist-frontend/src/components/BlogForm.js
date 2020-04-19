@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import shortid from 'shortid'
 import PropTypes from 'prop-types'
 import InputField from './InputField'
 import Button from './Button'
@@ -26,13 +25,13 @@ const BlogForm = ({ createBlog }) => {
       const title = inputValue?.title
       const author = inputValue?.author
       const url = inputValue?.url
-      const id = shortid.generate()
+      const likes = 0
 
       const blog = {
         title,
         author,
         url,
-        id,
+        likes,
       }
 
       createBlog(blog)

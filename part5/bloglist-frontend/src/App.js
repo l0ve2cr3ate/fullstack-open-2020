@@ -37,24 +37,7 @@ const App = () => {
     }
   }, [])
 
-  // const handleInputChange = (event) => {
-  //   const target = event.target;
-  //   const value = target.value;
-  //   const name = target.name;
-
-  //   setInputValue((prevValues) => {
-  //     return {
-  //       ...prevValues,
-  //       [name]: value,
-  //     };
-  //   });
-  // };
-
   const handleLogin = async (username, password) => {
-    // event.preventDefault();
-    // const username = inputValue?.username;
-    // const password = inputValue?.password;
-
     if (!username || username === '' || !password || password === '') {
       setMessage({ error: 'Please fill in username and password' })
       setTimeout(() => {
@@ -71,7 +54,13 @@ const App = () => {
       await blogService.setToken(user.token)
       setUser(user)
 
-      // setInputValue({ username: "", password: "" });
+      // set notification message
+      setMessage({
+        notification: `${user.name} succesfully logged in`,
+      })
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     } catch (err) {
       // set error message
       setMessage({
@@ -104,8 +93,12 @@ const App = () => {
         return
       }
 
+      // Add new blog to db
+      await blogService.create(blogObject)
+
+      const updatedBlogs = await blogService.getAll()
+
       // update React state with newly created blog
-      const updatedBlogs = [...blogs, blogObject]
       setBlogs(updatedBlogs)
 
       // set notification message
@@ -115,9 +108,6 @@ const App = () => {
       setTimeout(() => {
         setMessage(null)
       }, 5000)
-
-      // Add new blog to db
-      await blogService.create(blogObject)
     } catch (err) {
       // set error message
       setMessage({
@@ -180,27 +170,23 @@ const App = () => {
       {!user ? (
         <>
           <h1>Login to application</h1>
-          {(message?.notification || message?.error) && (
-            <Notification
-              type={message?.notification ? 'notification' : 'error'}
-              message={
-                message?.notification ? message?.notification : message?.error
-              }
-            />
-          )}
+          <Notification
+            type={message?.notification ? 'notification' : 'error'}
+            message={
+              message?.notification ? message?.notification : message?.error
+            }
+          />
           <LoginForm handleLogin={handleLogin} />
         </>
       ) : (
         <>
           <h1>Blogs</h1>
-          {(message?.notification || message?.error) && (
-            <Notification
-              type={message?.notification ? 'notification' : 'error'}
-              message={
-                message?.notification ? message?.notification : message?.error
-              }
-            />
-          )}
+          <Notification
+            type={message?.notification ? 'notification' : 'error'}
+            message={
+              message?.notification ? message?.notification : message?.error
+            }
+          />
 
           <span className="user">{user?.username} logged in</span>
           <Button onClick={handleLogout} className="logoutBtn" type="button">

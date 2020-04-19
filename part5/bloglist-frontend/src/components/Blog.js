@@ -21,6 +21,7 @@ const Blog = ({ blog, updateLike, removeBlog, user }) => {
       author,
       url,
     }
+
     setPostedBy(postedBy || blog.user?.name)
     setUsername(username || blog.user?.username)
     updateLike(id, updatedBlog)
@@ -33,7 +34,7 @@ const Blog = ({ blog, updateLike, removeBlog, user }) => {
   }
 
   return (
-    <div className={styles.blog}>
+    <div data-cy="blog" className={styles.blog}>
       <span className={styles.title}>{blog.title}</span>
       <span className={styles.posted}>Author: </span>
       <span className={styles.author}>{blog.author}</span>
@@ -55,8 +56,10 @@ const Blog = ({ blog, updateLike, removeBlog, user }) => {
         </div>
 
         <span className={styles.likesText}>Likes</span>
-        <span className={styles.likes}>{blog.likes}</span>
-        <Button onClick={update} className={styles.btn}>
+        <span data-cy="likes" className={styles.likes}>
+          {blog.likes}
+        </span>
+        <Button dataCy="like-btn" onClick={update} className={styles.btn}>
           Like
         </Button>
         <div>

@@ -319,3 +319,6 @@ When creating tests, check in the test runner that the tests use the right compo
 When Cypress runs a test it adds each `cy` command to an execution queue. When the code of the test method has been executed, Cypress will execute each command in the queue one by one. Cypress commands always return undefined, so you can't store `cy.contains('Login')` in a variable to use it.
 Cypress commands are like promises. Use `.then` to access their values.
 Use `cy.debug()` to stop test execution --> Cypress test runner developer console needs to be open. Noraml debugger() command won't stop the code between executing commands, but before any commands have been executed.
+
+Apart from running Cypress test with the graphical test runner, you can run cypress tests from the command line using `cypress run`.
+Don't forget to add `cypress/videos` to `.gitignore`.

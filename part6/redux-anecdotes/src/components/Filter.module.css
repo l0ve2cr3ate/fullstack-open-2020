@@ -1,0 +1,16 @@
+.filter {
+  margin: 0 0 10px 0;
+}
+
+.input {
+  color: #805ad5;
+  border: 1px solid #805ad5;
+  background: none;
+  border-radius: 15px;
+  padding: 5px 10px;
+}
+
+.input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+}

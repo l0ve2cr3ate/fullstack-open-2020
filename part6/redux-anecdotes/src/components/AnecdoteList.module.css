@@ -1,0 +1,29 @@
+.anecdoteContainer {
+  margin: 0.75rem 0;
+}
+
+.voteContainer {
+  margin: 0.25rem 0 0 0;
+}
+
+.voteBtn {
+  color: #805ad5;
+  border: 1px solid #805ad5;
+  background: none;
+  border-radius: 15px;
+}
+
+.voteBtn:hover {
+  cursor: pointer;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.voteBtn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+}
+
+.numVotes {
+  display: inline-flex;
+  min-width: 3.1rem;
+}

@@ -1,6 +1,10 @@
-### Solutions for part6 unicafe-redux
+### Solutions for part6 unicafe-redux and redux-anecdotes
 
-In order to start the frontend run the command: `npm start`
+The exercises for part6 are divided into subparts unicafe-redux and redux-anecdotes. You can find the solutions for the subparts in their respective directories.
+
+In order to start unicafe-redux frontend: `cd unicafe-redux` `npm start`
+In order to start redux-anecdotes frontend run the command: `cd redux-anecdotes` `npm start`
+To start redux-anecdotes json-webserver: `cd redux-anecdotes` `npm run server`
 
 ### Exercises part6 unicafe-redux
 
@@ -13,6 +17,8 @@ Implement the reducer and its tests. Start by expanding the reducer so that both
 
 6.2: unicafe revisited, step2
 Implement the actual functionality of the application.
+
+### Exercises part6 redux-anecdotes
 
 Exercises 6.3.-6.8.
 Let's make a new version of the anecdote voting application from part 1.
@@ -65,5 +71,162 @@ Extend the application so that it uses the Notification component to display a m
 6.12 Better anecdotes, step10
 Implement filtering for the anecdotes that are displayed to the user. Store the state of the filter in the redux store. It is recommended to create a new reducer and action creators for this purpose. Create a new Filter component for displaying the filter.
 
+Exercises 6.13.-6.14
+6.13 Anecdotes and the backend, step1
+When the application launches, fetch the anecdotes from the backend implemented using json-server.
+
+6.14 Anecdotes and the backend, step2
+Modify the creation of new anecdotes, such that the anecdotes are stored in the backend.
+
+Exercises 6.15.-6.18
+
+6.15 Anecdotes and the backend, step3
+Modify the initialization of redux-store to happen using asynchronous action creators, which are made possible by the redux-thunk-library.
+
+6.16 Anecdotes and the backend, step4
+Also modify the creation of a new anecdote to happen using asynchronous action creators, made possible by the redux-thunk-library.
+
+6.17 Anecdotes and the backend, step5
+Voting does not yet save changes to the backend. Fix the situation with the help of the redux-thunk-library.
+
+6.18 Anecdotes and the backend, step6
+The creation of notifications is still a bit tedious, since one has to do two actions and use the setTimeout function:
+
+```javascript
+dispatch(setNotification(`new anecdote '${content}'`));
+setTimeout(() => {
+  dispatch(clearNotification());
+}, 5000);
+```
+
+Make an asynchronous action creator, which enables one to provide the notification as follows:
+
+```javascript
+dispatch(setNotification(`you voted '${anecdote.content}'`, 10));
+```
+
+the first parameter is the text to be rendered and the second parameter is the time to display the notification given in seconds.
+
+### Notes part6 State management with Redux
+
+#### a. Flux-architecture and Redux
+
+In Flux, the state is separated from React components in a _store_. State in the store is not changed directly, but via _actions_.
+Flow: Action --> Dispatcher --> Store --> View
+
+**Redux**
+Redux works like Fluc principle. State is stored in a _store_ --> whole state of app is stored in one js object. The state of the store is changed with _actions_: objects which have at least a field determining the _type_ of action, and optionally data.
+_Reducers_ specify how state changes in response to actions. It takes in current state and action and returns new state --> reducers use switch statements.
+Reducers should not be called directly from app code. They are given as a param to `createStore` function:
+`const store = createStore(reducer)`.
+`store.getState()` returns the state of the store.
+`store.dispatch(action)` dispatches action.
+`subscribe` creates callback functions that the store calls when stated is changed.
+
+**Pure functions, immutable**
+Reducers must be _pure functions_ --> not cause any side effects and always return the same response when called with same params. A reducers state must be composed of _immutable_ objects. If state changes, old object is not mutated, but replaced with new changed object.
+`deep-freeze` library can be used to ensure reducer is immutable function --> use it in your tests.
+
+**Array spread syntax**
+
+```javascript
+const numbers = [1,2,3]
+[...numbers, 4,5] // --> results in [1,2,3,4,5]
+[numbers, 4,5] // --> results in [[1,2,3],4,5] (nested array)
+const nums = [1,2,3,4,5]
+const [first, seconds, ...rest] = nums
+// first --> 1
+// second --> 2
+// rest --> [3,4,5,6]
+```
+
+**Uncontrolled form**
+In a _controlled_ component, form data is handled by React component. In _uncontrolled_ components form data is handled by the DOM itself. Uncontrolled inputs are like traditional HTML inputs. You can get their value using a ref.
+
+**Action creators** --> functions that create actions:
+
+```javascript
+const toggleImportanceOf = (id) -> {
+  return {
+    type: 'TOGGLE_IMPORTANCE',
+    data: {id}
+  }
+}
+```
+
+In the component where you dispatch the action:
+
+```javascript
+const toggleImportance = (id) => {
+  store.dispatch(toggleImportanceOf(id));
+};
+```
+
+**Forwarding Redux-Store to various components**
+React-redux provide a _Provider_ component which can be wrapped around the app. The app's store is given to the provider as its attribute store. `useDispatch` provides any React component access to dispatch-function of redux-store. Components can access store with `useSelector` hook from react-redux. useSelector receives a function as a param. The function searches for or selects data from redux-store.
+
+_Presentational_ components: only concerned with UI.
+_Container_ components: contain app logic.
+
+#### b. Many reducers
+
+**Store with complex state**
+Radio buttons with the same name attribute form a 'button group', where only one option can be selected.
+
+**Combined reducers**
+We can create multiple reducers to handle returning multiple pieces of state. The reducers can be combined with `combineReducer` function from redux:
+
+```javascript
+const reducer = combineReducers({
+  notes: noteReducer,
+  filter: filterReducer,
+});
+```
+
+--> the state of the store is an object with the properties notes and filter.
+_Notice:_ The combined reducer works in such a way that every action gets handled in every part of the combined reducer.
+
+**Redux Devtools** --> chrome extension to monitor redux-store state and actions --> needs redux-devtools-extension. Use it like:
+
+```javascript
+import { composeWithDevTools } from 'redux-devtools-extension'
+
+const store = createStore({
+  reducer,
+  composeWithDevTools()
+})
+```
+
+#### c. Communicating with server in a redux app
+
+**Asynchronous actions and redux thunk**
+Redux-thunk enables us to create _async actions_. It is _redux middleware_ and needs to be initialized:
+
+```javascript
+const store = createStore({
+  reducer,
+  composeWithDevTools(applyMiddleware(thunk))
+})
+```
+
+Redux-thunk lets you define action creators that return a function having a dispatch-method of redux-store as param. This makes it possible to create async action creators, which wait for some operation to finish before they dispatch the action.
+
+```javascript
+const initializeNotes = () => {
+  return async (dispatch) => {
+    const notes = await noteService.getAll();
+    dispatch({
+      type: "INIT_NOTES",
+      data: notes,
+    });
+  };
+};
+```
+
 For more info about exercises 6.1-6.8: https://fullstackopen.com/en/part6/flux_architecture_and_redux
 For more info about exercises 6.9-6.12: https://fullstackopen.com/en/part6/many_reducers
+For more info about exercises 6.13-6.18: https://fullstackopen.com/en/part6/communicating_with_server_in_a_redux_application
+
+```
+
+```

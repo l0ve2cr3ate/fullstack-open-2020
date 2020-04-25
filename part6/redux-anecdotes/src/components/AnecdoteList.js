@@ -1,10 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { voteAnecdote } from "../reducers/anecdoteReducer";
-import {
-  setNotificationMessage,
-  removeNotificationMessage,
-} from "../reducers/notificationReducer";
+import { setNotification } from "../reducers/notificationReducer";
 import styles from "./AnecdoteList.module.css";
 
 const AnecdoteList = () => {
@@ -22,32 +19,28 @@ const AnecdoteList = () => {
 
   const dispatch = useDispatch();
 
-  const vote = (id) => {
-    dispatch(voteAnecdote(id));
-    const votedAnecdote = anecdotes.find((anecdote) => anecdote.id === id);
+  const vote = (votedAnecdote) => {
+    dispatch(voteAnecdote(votedAnecdote));
+
     dispatch(
-      setNotificationMessage({ message: `You voted ${votedAnecdote.content}` })
+      setNotification({ message: `You voted ${votedAnecdote.content}` }, 5)
     );
-    setTimeout(() => {
-      dispatch(removeNotificationMessage());
-    }, 5000);
   };
   return (
     <>
-      {anecdotes.map((anecdote) => (
-        <div className={styles.anecdoteContainer} key={anecdote.id}>
-          <div>{anecdote.content}</div>
-          <div className={styles.voteContainer}>
-            <span className={styles.numVotes}>has {anecdote.votes}</span>
-            <button
-              className={styles.voteBtn}
-              onClick={() => vote(anecdote.id)}
-            >
-              vote
-            </button>
+      {anecdotes
+        .sort((a, b) => (a.votes > b.votes ? -1 : 1))
+        .map((anecdote) => (
+          <div className={styles.anecdoteContainer} key={anecdote.id}>
+            <div>{anecdote.content}</div>
+            <div className={styles.voteContainer}>
+              <span className={styles.numVotes}>has {anecdote.votes}</span>
+              <button className={styles.voteBtn} onClick={() => vote(anecdote)}>
+                vote
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
     </>
   );
 };

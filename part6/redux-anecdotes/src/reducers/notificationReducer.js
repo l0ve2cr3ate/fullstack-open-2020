@@ -11,14 +11,21 @@ const notificationReducer = (state = initialState, action) => {
   }
 };
 
-export const setNotificationMessage = (message) => {
-  return {
-    type: "SET_MESSAGE",
-    data: { message },
+export const setNotification = (message, delay) => {
+  return async (dispatch) => {
+    dispatch({
+      type: "SET_MESSAGE",
+      data: {
+        message,
+        delay: setTimeout(() => {
+          dispatch(removeNotification(""));
+        }, delay * 1000),
+      },
+    });
   };
 };
 
-export const removeNotificationMessage = (message) => {
+export const removeNotification = () => {
   return {
     type: "REMOVE_MESSAGE",
   };

@@ -1,7 +1,7 @@
 import deepFreeze from "deep-freeze";
 import notificationReducer from "./notificationReducer";
 
-const initialState = { message: "" };
+const initialState = "";
 
 describe("notification reducer", () => {
   test("should return a proper initial state when called with undefined state", () => {
@@ -18,12 +18,12 @@ describe("notification reducer", () => {
     const state = initialState;
     const action = {
       type: "SET_MESSAGE",
-      data: { message: "Display notification" },
+      data: { message: "Display notification", delay: 5 },
     };
 
     deepFreeze(state);
     const newState = notificationReducer(state, action);
-    expect(newState).toEqual(action.data.message);
+    expect(newState).toEqual(action.data);
   });
 
   test("notification can be removed", () => {

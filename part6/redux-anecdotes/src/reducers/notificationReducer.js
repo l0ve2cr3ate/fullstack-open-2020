@@ -1,9 +1,11 @@
-const initialState = { message: "" };
+const initialState = "";
 
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "SET_MESSAGE":
-      return action.data.message;
+    case "SET_MESSAGE": {
+      clearTimeout(state.delay);
+      return action.data;
+    }
     case "REMOVE_MESSAGE":
       return initialState;
     default:

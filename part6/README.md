@@ -107,6 +107,19 @@ dispatch(setNotification(`you voted '${anecdote.content}'`, 10));
 
 the first parameter is the text to be rendered and the second parameter is the time to display the notification given in seconds.
 
+Exercises 6.19.-6.21
+
+6.19 anecdotes and connect, step1
+Modify the AnecdoteList so that it accesses the store's state with the help of the connect function.
+
+6.20 anecdotes and connect, step2
+Do the same for the Filter and AnecdoteForm components.
+
+6.21 anecdotes, the grand finale
+You (probably) have one nasty bug in your application. If the user clicks the vote button multiple times in a row, the notification is displayed funnily. For example if a user votes twice in three seconds, the last notification is only displayed for two seconds (assuming the notification is normally shown for 5 seconds). This happens because removing the first notification accidentally removes the second notification.
+
+Fix the bug so that after multiple votes in a row, the notification for the last vote is displayed for five seconds. This can be done by cancelling the removal of the previous notification when a new notification is displayed whenever necessary.
+
 ### Notes part6 State management with Redux
 
 #### a. Flux-architecture and Redux
@@ -223,10 +236,72 @@ const initializeNotes = () => {
 };
 ```
 
+#### d. Connect
+
+**Important**: use `useSelector` and `useDispatch` in new apps (instead of `connect`).
+**Using connect function to share redux store to components**
+`connect` can be used to connect component to redux store. It accepts a `mapStateToProps` function which can be used for defining the props of the connected component based on the state if the redux store.
+`mapDispatchToProps` is the second param of `connect` function --> group of action creator functions passed to connected component as props.
+
+**Referencing action creators passed as props**
+Reference action creator like: `props.createNote`: it contains automatic dispatch added by connect. Don't call the imported (unmodified) version, since it does not contain the added automatic dispatch. --> console.log both functions to see the difference.
+
+**Alternative way to using mapDispatchToProps**
+version 1:
+
+```javascript
+const NewNote = () => {
+  /*...*/
+};
+export default connect(null, { createNote })(NewNote);
+```
+
+The functions passed in mapDispatchToProps must be action creators (functions that return redux actions).
+
+version 2:
+
+```javascript
+const mapDispatchToProps => dispatch => {
+  return {
+    createNote: value => {
+      dispatch(createNote(value))
+    }
+  }
+}
+export default connect(
+  null,
+  mapDispatchToProps
+)(NewNote)
+```
+
+--> mapDispatchToProps is a function that connect will invoke by passing it the dispatch function as a param. The return value of the function is an object that defines a group of functions that get passed to connected component as props. This 2nd version of mapDispatchToProps can be needed if dispatched actions need to reference props of the component.
+
+**Presentational/Container revisited**
+_Presentational component_
+
+- concerned with how things look
+- often allow containment via props.children
+- have no dependencies of the rest of the app
+- don't specify how data is loaded/mutated
+- receive data and callbacks via props
+- rarely have own state (only UI state)
+- functional components
+
+_Container component_
+
+- how things work
+- provide data and behavior to presentational/other container components
+- call redux actions + provide these as callbacks to presentational components
+- statefull
+- connect
+
+**connect**
+--> _Higher order component_ (HOC): a function taht accepts a 'regular' component as its param and returns a new component as its return value. A HOC is a generalization of _higher order function_ concept (HOF). _HOF_: function that accepts functions as param and returns functions. For example: map, filter, find.
+
+**Redux and component state**
+When using redux, you can still use local state for certain situations. Complicated forms can for example be handled using useState (local component state)
+
 For more info about exercises 6.1-6.8: https://fullstackopen.com/en/part6/flux_architecture_and_redux
 For more info about exercises 6.9-6.12: https://fullstackopen.com/en/part6/many_reducers
 For more info about exercises 6.13-6.18: https://fullstackopen.com/en/part6/communicating_with_server_in_a_redux_application
-
-```
-
-```
+For more info about exercises 6.19.-6.21: https://fullstackopen.com/en/part6/connect

@@ -1,0 +1,7 @@
+.page-wrapper {
+  margin: 3rem 3rem 0;
+}
+
+.main {
+  min-height: calc(100vh - 225px);
+}

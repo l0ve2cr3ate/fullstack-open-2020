@@ -1,0 +1,18 @@
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.button {
+  width: 100px;
+  background: #d6bbfc;
+  border: none;
+  border-radius: 3px;
+  padding: 5px 7px;
+  color: #382b5f;
+}
+
+.button:hover {
+  cursor: pointer;
+  background: #a779e9;
+}

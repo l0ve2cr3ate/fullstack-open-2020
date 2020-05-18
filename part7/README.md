@@ -2,7 +2,11 @@
 
 The exercises for part7 are divided into subparts. You can find the solutions for the subparts in their respective directories.
 
+First cd into part 7: `cd part7`
 In order to start routed-anecdotes : `cd routed-anecdotes` `npm start`
+In order to start country-hook: `cd country-hook` `npm start`
+In order to start ultimate-hook frontend: `cd ultimate-hooks` `npm start`
+In order to start ultimate-hook json-webserver: `cd ultimate-hooks` `npm start server`
 
 ### Exercises part7 routed-anecdotes
 
@@ -16,3 +20,150 @@ Implement a view for showing a single anecdote. Navigating to the page showing t
 
 7.3: routed anecdotes, step3
 The default functionality of the creation form is quite confusing, because nothing seems to be happening after creating a new anecdote using the form. Improve the functionality such that after creating a new anecdote the application transitions automatically to showing the view for all anecdotes and the user is shown a notification informing them of this successful creation for the next 10 seconds.
+
+Exercises 7.4.-7.8
+7.4: anecdotes and hooks step1
+Simplify the anecdote creation form of your application with the useField custom hook.
+
+7.5: anecdotes and hooks step2
+Add a button to the form that you can use to clear all the input fields. Expand the functionality of the useField hook so that it offers a new reset operation for clearing the field.
+
+7.6: anecdotes and hooks step3
+If your solution did not cause a warning to appear in the console you have already finished this exercise.
+If you see the warning in the console, make the necessary changes to get rid of the `Invalid value for prop reset' on <input> tag` console warning. The input element should not be given a reset attribute. Come up with a solution that fixes the issue, but is still easy to use with spread syntax.
+
+### Exercise part 7 country-hook
+
+7.7: country hook
+The application can be used to search for country details from the https://restcountries.eu/ interface. If country is found, the details of the country are displayed. If country is not found, message is displayed to the user. The application is otherwise complete, but in this exercise you have to implement a custom hook useCountry, which can be used to search for the details of the country given to the hook as a parameter. Use the api endpoint full name to fetch country details in a useEffect-hook within your custom hook.
+
+### Exercise part 7 ultimate-hooks
+
+7.8: ultimate hooks
+The code of the application responsible for communicating with the backend of the note application of the previous parts looks like this:
+
+```javascript
+import axios from "axios";
+const baseUrl = "/api/notes";
+
+let token = null;
+
+const setToken = (newToken) => {
+  token = `bearer ${newToken}`;
+};
+
+const getAll = () => {
+  const request = axios.get(baseUrl);
+  return request.then((response) => response.data);
+};
+
+const create = async (newObject) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+
+  const response = await axios.post(baseUrl, newObject, config);
+  return response.data;
+};
+
+const update = (id, newObject) => {
+  const request = axios.put(`${baseUrl} /${id}`, newObject);
+  return request.then((response) => response.data);
+};
+
+export default { getAll, create, update, setToken };
+```
+
+The code is in no way specific to the fact that our application deals with notes. Excluding the value of the baseUrl variable, the same code could be reused in the blog post application for dealing with the communication with the backend.
+
+Extract the code for communicating with the backend into its own `useResource` hook. It is sufficient to implement fetching all resources and creating a new resource. The `useResource` custom hook returns an array of two items just like the state hooks. The first item of the array contains all of the individual resources and the second item of the array is an object that can be used for manipulating the resource collection, like creating new ones.
+
+### Exercises part 7 extending-bloglist
+
+Exercises 7.9.-7.21.
+7.9: redux, step1
+Refactor the application from using internal React component state to using Redux for the application's state management.
+
+Additionally, change the application's notifications to use Redux at this point of the exercise set.
+
+### Notes part 7: React router, custom hooks, styling app with css and webpack.
+
+#### a. React Router
+
+**Application Navigation Structure**
+In old school web apps, changing a page would be accomplished by making an HTTP GET request to the server + rendering HTML representing the view that is returned. In Single Page Applications, we are actually always on the same page. If HTTP requests are made switching views, they only fetch data.
+Each view should have it's own address to make bookmarking possible + let back button behave like expected.
+`react router` can be used to handle navigation.
+`BrowserRouter` is a `Router` that uses `HTML5 historyAPI` to keep UI in sync with URL --> place pages inside the router.
+Normally the browser loads a new page when the url in the address bar changes. `BrowserRouter` helps to use url in address bar for internal routing --> browser will not load new content from server.
+
+```javascript
+<Link to="/notes">notes</Link>
+```
+
+creates a link with url `/notes`
+
+```javascript
+<Route path="/notes">
+  <Notes />
+</Route>
+```
+
+defines which component should be rendered on `/notes` route.
+
+Wrap the `Routes` in a `Switch` component to render the first component whose path matches the url in the address bar. Order is important!
+`/` is the start of every path, so if you render this route first, none of the other components will be rendered.
+
+**Parameterized route**
+`path="/notes/:id"` --> :id is param
+in the Note component:
+
+```javascript
+const id = useParams().id; // --> Note component can access url param with useParams.
+const note = notes.find((n) => n.id === Number(id));
+```
+
+**useHistory**
+
+```javascript
+const history = useHistory(); /* --> with this function component can access history object which is used to modify browser's url programmatically*/
+history.push("/"); // --> route back to home
+```
+
+**Redirect**
+
+```javascript
+<Route path="/users" render={() => user ? <Users />: <Redirect to="/login" />}>
+```
+
+If user isn;t logged in, redirect to login.
+
+Footer needs to be shown on all pages --> place it outside of the router.
+
+**Parameterized route revisited**
+Note component receives all notes, but only needs one. Solution: use `useRouteMatch` --> can't be used in component where Router is defined.
+
+```javascript
+const match = useRouterMatch("/notes/:id");
+const note = match
+  ? notes.find((note) => note.id === Number(match.params.id))
+  : null;
+```
+
+#### b. Custom hooks
+
+**Rules of hooks**
+
+- Don't call hooks from inside loops, conditionals or nested functions --> always use them at the top level of your React component.
+- Don't call hooks from regular Javascript functions --> call hooks from React functions or from custom hooks.
+
+**Custom Hooks**
+Primary purpose: facilitate reuse of logic used in components.
+
+#### c. More about Styles
+
+There are multiple ways to style React app. You can use an UI framework to speed up your development. `Styled components` is a popular CSS-in-JS solution for styling React apps.
+
+For more info about exercises 7.1-7.3 react-router: https://fullstackopen.com/en/part7/react_router
+For more info about exercises 7.4-7.8 custom hooks: https://fullstackopen.com/en/part7/custom_hooks
+For more info about exercises 7.9.7.21 extending-bloglist: https://fullstackopen.com/en/part7/exercises_extending_the_bloglist

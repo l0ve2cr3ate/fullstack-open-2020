@@ -1,0 +1,37 @@
+form {
+  align-self: flex-start;
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
+}
+
+.submitBtn {
+  color: #16d3d8;
+  background: none;
+  border: 1px solid #16d3d8;
+  border-radius: 5px;
+  padding: 0 7px;
+  height: 1.5rem;
+  font-weight: 700;
+  align-self: flex-start;
+}
+
+@media only screen and (min-width: 340px) {
+  .submitBtn {
+    align-self: flex-end;
+  }
+}
+
+@media only screen and (min-width: 500px) {
+  .flex {
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .submitBtn {
+    margin: 0 0.3rem;
+    align-self: center;
+  }
+}

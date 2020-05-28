@@ -1,0 +1,38 @@
+.hide {
+  display: none;
+}
+
+.toggle {
+  position: relative;
+  align-self: flex-start;
+}
+
+.btn {
+  background: #16d3d8;
+  border: none;
+  border-radius: 5px;
+  padding: 7px 10px;
+  color: #fff;
+  font-weight: 700;
+  align-self: flex-start;
+}
+
+.btn:hover {
+  background: #13b7bb;
+}
+
+.cancelBtn {
+  background: #f90303;
+  border: none;
+  border-radius: 5px;
+  padding: 7px 10px;
+  color: #fff;
+  font-weight: 700;
+  position: absolute;
+  top: 7.5rem;
+  left: 6.2rem;
+}
+
+.cancelBtn:hover {
+  background: #d20000;
+}

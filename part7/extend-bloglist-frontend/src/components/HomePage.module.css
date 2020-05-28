@@ -1,0 +1,9 @@
+.blogs {
+  margin: 1rem 0 0 0;
+  width: 100%;
+}
+
+.title {
+  align-self: flex-start;
+  margin: 0 0 1rem;
+}

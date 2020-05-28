@@ -1,0 +1,13 @@
+.loginBtn {
+  background: #16d3d8;
+  border: none;
+  border-radius: 5px;
+  padding: 7px 10px;
+  color: #fff;
+  font-weight: 700;
+  margin: 0 0 0 13.8rem;
+}
+
+.loginBtn:hover {
+  background: #13b7bb;
+}

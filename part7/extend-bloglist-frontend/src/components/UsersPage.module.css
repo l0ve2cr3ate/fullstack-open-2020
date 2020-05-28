@@ -1,0 +1,45 @@
+.users__container {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #16d3d8;
+  border-radius: 5px;
+}
+
+.users__title {
+  align-self: flex-start;
+}
+
+.users__subtitle,
+.users__subtitleName {
+  font-weight: 500;
+  display: inline-flex;
+}
+
+.users__subtitleName {
+  min-width: 140px;
+}
+
+.users__name {
+  display: inline-flex;
+  min-width: 140px;
+}
+
+.users__list {
+  margin: 0;
+  padding: 0;
+}
+
+.users__listitem {
+  list-style: none;
+  line-height: 1.5;
+}
+
+.users__link {
+  text-decoration: none;
+  color: #a3c3c7;
+}
+
+.users__link:hover {
+  color: #16d3d8;
+  font-weight: 500;
+}

@@ -1,0 +1,15 @@
+.notification {
+  background: #d9ffd9;
+  margin: 10px 0;
+  border: 1px solid #02e402;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.error {
+  background: #ffe0de;
+  margin: 10px 0;
+  border: 1px solid #f90303;
+  padding: 5px;
+  border-radius: 5px;
+}

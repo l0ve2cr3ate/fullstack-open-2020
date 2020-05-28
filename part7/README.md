@@ -7,6 +7,12 @@ In order to start routed-anecdotes : `cd routed-anecdotes` `npm start`
 In order to start country-hook: `cd country-hook` `npm start`
 In order to start ultimate-hook frontend: `cd ultimate-hooks` `npm start`
 In order to start ultimate-hook json-webserver: `cd ultimate-hooks` `npm start server`
+In order to start frontend extend-bloglist-frontend: `cd extend-bloglist-frontend` `npm start`
+In order to start the backend-server locally, run the command:
+`cd extend-bloglist-backend`
+`npm start`  
+In order to start backend-server locally in development mode for extend-bloglist: `cd extend-bloglist-backend` `npm run dev`
+The blog-list app uses mongodb. You will need to add a `MONGO_URI` to your `.env` file.
 
 ### Exercises part7 routed-anecdotes
 
@@ -85,6 +91,43 @@ Exercises 7.9.-7.21.
 Refactor the application from using internal React component state to using Redux for the application's state management.
 
 Additionally, change the application's notifications to use Redux at this point of the exercise set.
+
+7.10: redux, step2
+Store the information about blog posts in the Redux store. In this exercise it is enough that you can see the blogs in backend and create a new blog.
+
+You are free to manage the state for logging in and creating new blog posts by using the internal state of React components.
+
+7.11: redux, step3
+Expand your solution so that it is again possible to like and delete a blog.
+
+7.12: redux, step4
+Store the information about the signed in user in the Redux store.
+
+7.13: Users view
+Implement a view to the application that displays all of the basic information related to users.
+
+7.14: Individual user view
+Implement a view for individual users, that displays all of the blog posts added by that user.
+You can access the view by clicking the name of the user in the view that lists all users.
+
+7.15: Blog view
+Implement a separate view for blog posts. Users should be able to access the view by clicking the name of the blog post in the view that lists of all of the blog posts. After you're done with this exercise, the functionality that was implemented in exercise 5.6 is no longer necessary. Clicking a blog post no longer needs to expand the item in the list and display the details of the blog post.
+
+7.16: Navigation
+Implement a navigation menu for the application.
+
+7.17: comments, step1
+Implement the functionality for commenting on blog posts.
+Comments should be anonymous, meaning that they are not associated to the user who left the comment. An appropriate mechanism for adding comments to a blog post would be an HTTP POST request to the api/blogs/:id/comments endpoint.
+
+7.18: comments, step2
+Extend your application so that users can add comments to blog posts from the frontend.
+
+7.19: Styles, step1
+Improve the appearance of your application by applying one of the methods shown in the course material.
+
+7.20: Styles, step2
+You can mark this exercise as finished if you use an hour or more for styling your application.
 
 ### Notes part 7: React router, custom hooks, styling app with css and webpack.
 

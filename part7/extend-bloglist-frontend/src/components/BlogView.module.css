@@ -1,0 +1,108 @@
+.blogContainer {
+  border: 1px solid #16d3d8;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin: 0.5rem 0;
+  max-width: 600px;
+  width: 100%;
+}
+
+.title {
+  margin: 0 0 0.2rem 0;
+  font-size: 1.2rem;
+  color: #055c5f;
+}
+
+.author {
+  font-size: 10px;
+  color: #a3c3c7;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.btn {
+  background: none;
+  border: none;
+  display: flex;
+}
+
+.likeIcon {
+  color: #9ebcbf;
+}
+
+.likeIcon:hover {
+  color: #13b7bb;
+}
+
+.infoContainer {
+  display: flex;
+  align-items: center;
+  color: #9ebcbf;
+  margin-top: -0.3rem;
+}
+
+.removeBtn {
+  background: #f90303;
+  border: none;
+  border-radius: 5px;
+  padding: 3px 7px;
+  color: #fff;
+  font-weight: 700;
+  margin: 0.25rem 0;
+}
+
+.removeBtn:hover {
+  background: #d20000;
+}
+
+.likes {
+  font-size: 12px;
+}
+
+.url {
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  color: #16d3d8;
+  margin-top: 0.6rem;
+  display: inline-flex;
+}
+
+.url:hover {
+  color: #13b7bb;
+}
+
+.dot {
+  font-size: 24px;
+  display: inline-flex;
+  margin-right: 5px;
+}
+
+.addedBy,
+.user {
+  font-size: 12px;
+}
+
+.user {
+  padding-left: 5px;
+}
+
+.commentTitle {
+  color: #055c5f;
+  margin: 2.5rem 0 0 0;
+  align-self: flex-start;
+  font-size: 18px;
+}
+
+.commentList {
+  padding: 0;
+  align-self: flex-start;
+  list-style: none;
+  width: 100%;
+}
+
+@media only screen and (min-width: 500px) {
+  .commentList {
+    padding: 0 0 0 2rem;
+  }
+}

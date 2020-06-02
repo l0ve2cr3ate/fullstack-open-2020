@@ -207,6 +207,75 @@ Primary purpose: facilitate reuse of logic used in components.
 
 There are multiple ways to style React app. You can use an UI framework to speed up your development. `Styled components` is a popular CSS-in-JS solution for styling React apps.
 
+#### d. Webpack
+
+**Bundling**
+The code of React apps is divided into separate modules, but browsers can't handle these modules. Code that is divided into modules must be _bundled_ (transformed into a single file) to be readable for browsers. Webpack is a tool which can bundle code.
+Create-react-app uses webpack under the hood for bundling. It is possible to _eject_ the app, so you can configure your own webpack, but after ejecting you can't go back to the default configuration.
+You can also use Webpack to bundle files yourself. In the `webpack.config.js` file you will need to specify the _entry point_ (e.g. index.js), which specifies the file that will server as entry point for bundling the app, and the _output path + filename_. The output property defines the location where the bundled code will be stored. Target directory must be defined as _absolute path_ (use `path.resolve` method). `__dirname`: global variable is Node which stores path to current directory.
+
+**Bundling React**
+For bundling React we will need a `build/index.html` file that will serve as the 'main page' of the app, and will load the bundled js code with a script tag.
+
+**Loaders**
+By default, Webpack can only handle plain js, not JSX. _Loaders_ inform Webpack which files need processing before bundling. We can use a loader to transform JSX into regular js (babel-loader).
+Loaders are defined under the `module` property in the `rules` array in the `webpack.config.js` file. Loaders consist of three parts:
+
+1. test
+2. loader
+3. query
+
+The _test_ property specifies for which files the loader is (e.g.files ending with `.js$`). The _loader_ property specifies which loader should be used for the processing. The _query_ property specifies parameters for the loader, like presets.
+
+**Note:** If the bundled code uses `async/await` syntax, the browser will not render anything on some browsers. To fix this issue, we can use a polyfill (`@babel/polyfill`). This polyfill should be added to the entry point in the `webpack.config.js` file: `['@babel/polyfill', './src/index.js']`
+
+**Transpilers**
+_Transpiling_: process of transforming code of one form of js to another --> compile code by transforming it from one language tp another. Babel helps us transpile JSX into js. The transpilation process executed by Babel is defined with `plugins`. Presets are pre-configured plugins. You can use `@babel/preset-react` for transpiling JSX. `@babel/preset-env` plugin transpiles ESNext code into ES5.
+
+**CSS**
+When using CSS, we have to use `CSS and style loaders`.
+_CSS loader_ loads the CSS files and _style loader_ generates and injects a style element that contains all styles of the app. CSS definitions are included in the main.js file with this config. To generate a separate CSS file `mini-extract-plugin` can be used.
+
+**Webpack-Dev-Server**
+_Webpack-dev-server_ starts web-app at configured port and refreshes page after changes. When using `webpack-dev-server` the code is not bundled into main.js but in memory.
+
+**Source maps**
+_Source-map_ makes it possible to map errors that occur during execution of bundle to corresponding part of original source-code.
+
+**Minifying the Code**
+Starting from version 4 of Webpack, minification plugin does not require additional configuration, just add `--mode=production` to bundling script --> comments, unneccessary whitespace and newline characters will be removed and variable names will be replaced with single character.
+
+**Development and production configuration**
+We can create different configurations for webpack for development and production.
+
+**Polyfill**
+Axios uses promises and Internet Explorer does not support promises. We can use a polyfill to solve this problem.
+
+#### e. Class Components, Miscellaneous
+
+**Class Components**
+
+- Class components can have a _constructor_
+- Class components have a _render_ method
+- Class components contain one state: `state = {}` or `this.state = {}`
+- Class components have _life-cycle_ methods.
+- Data should be fetch in _ComponentDidMount_ lifecycle method, which will be executed once right after the 1st time a component renders.
+- State is changed with _setState_ method. Calling _setState_ triggers a rerender of the class component.
+
+Benefit of functional components: no _this-referende_
+Class components offer no benefits over functional components with hooks, with exception of _error-boundry_ mechanism --> catch js errors anywhere in child component tree, log these errors and display fallback UI.
+
+**Websockets** --> makes 2-way communication between browser and server possible. Websocket API is not fully supported, but you can use Socket.io which has fallbacks.
+
+**Virtual DOM**
+Function defining React component returns a set of _React-elements_. These React-elements make up the _virtual DOM_, which is stored in system memory during runtime. _ReactDOM_ renders React-elements in the virtual DOM to the real DOM. When the state of the app changes, a new virtual DOM gets defined. React compares previous virtual DOM in memory with new virtual DOM so it only has to update changed elements in the real DOM instead of rendering the whole DOM.
+
+**React/Node-application security**
+One of the most common security risks in web-apps is _injection_: text (or something else) send using a form in an app is interpreted completely different than software developer intended.
+Example: _SQL-injection_ --> prevented by _sanitizing_ the input: check if parameters of the query contain forbidden characters, if so, replace forbidden characters with safe alternative by escaping them.
+Injection attacks are also possible in NoSQL-databases. Mongoose prevents injection attacks by sanitizing the queries.
+_Cross-site Scripting (XSS)_: attack where it is possible to inject malicious js into legitimate web-app. The malicious code would then be executed in the browser of the victim. React sanitizes data in variables to help prevent these kind of attacks.
+
 For more info about exercises 7.1-7.3 react-router: https://fullstackopen.com/en/part7/react_router
 For more info about exercises 7.4-7.8 custom hooks: https://fullstackopen.com/en/part7/custom_hooks
 For more info about exercises 7.9.7.21 extending-bloglist: https://fullstackopen.com/en/part7/exercises_extending_the_bloglist

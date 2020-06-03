@@ -1,41 +1,6 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-
-const useField = (type) => {
-  const [value, setValue] = useState("");
-
-  const onChange = (event) => {
-    setValue(event.target.value);
-  };
-
-  return {
-    type,
-    value,
-    onChange,
-  };
-};
-
-const useResource = (baseUrl) => {
-  const [resources, setResources] = useState([]);
-
-  const getAll = () => {
-    const request = axios.get(baseUrl);
-    return request.then((response) => setResources(response.data));
-  };
-
-  const create = async (resource) => {
-    const response = await axios.post(baseUrl, resource);
-    console.log({ response });
-    setResources([...resources, response.data]);
-  };
-
-  const service = {
-    create,
-    getAll,
-  };
-
-  return [resources, service];
-};
+import React, { useEffect } from "react";
+import { useField } from "./hooks/useField";
+import { useResource } from "./hooks/useResource";
 
 const App = () => {
   const content = useField("text");
@@ -48,6 +13,7 @@ const App = () => {
   useEffect(() => {
     noteService.getAll();
     personService.getAll();
+    // eslint-disable-next-line
   }, []);
 
   const handleNoteSubmit = (event) => {

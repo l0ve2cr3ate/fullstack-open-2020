@@ -6,7 +6,7 @@ First cd into part 7: `cd part7`</br>
 In order to start routed-anecdotes : `cd routed-anecdotes` and then `npm start`</br>
 In order to start country-hook: `cd country-hook` and then `npm start`</br>
 In order to start ultimate-hook frontend: `cd ultimate-hooks` and then `npm start`</br>
-In order to start ultimate-hook json-webserver: `cd ultimate-hooks` and then `npm start server`</br>
+In order to start ultimate-hook json-webserver: `cd ultimate-hooks` and then `npm run server`</br>
 In order to start frontend extend-bloglist-frontend: `cd extend-bloglist-frontend` and then `npm start`</br>
 In order to start the backend-server locally, run the command:`cd extend-bloglist-backend` and then `npm start` </br>
 In order to start backend-server locally in development mode for extend-bloglist: `cd extend-bloglist-backend` and then `npm run dev` </br>

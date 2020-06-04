@@ -1,0 +1,24 @@
+{
+  "name": "library-backend",
+  "version": "1.0.0",
+  "description": "GraphQL backend for small library",
+  "main": "library-backend.js",
+  "scripts": {
+    "start-server": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "GraphQL",
+    "node"
+  ],
+  "author": "l0ve2cr3ate",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.14.1",
+    "graphql": "^15.0.0",
+    "uuid": "^8.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}

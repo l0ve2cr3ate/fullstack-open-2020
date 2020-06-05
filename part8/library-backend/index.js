@@ -79,13 +79,6 @@ let books = [
   },
 ];
 
-// mutation {
-//   editAuthor(name: "Reijo Mäki", setBornTo: 1958) {
-//     name
-//     born
-//   }
-// }
-
 const typeDefs = gql`
   type Book {
     title: String!
@@ -139,10 +132,20 @@ const resolvers = {
         books.filter((book) => book.author === author.name)
       );
 
-      return booksPerAuthor.map((item) => ({
-        bookCount: item.length,
-        name: item[0].author,
-      }));
+      return booksPerAuthor.map((item) => {
+        let author = authors.find((author) => item[0].author === author.name);
+        if (author.born) {
+          author = {
+            bookCount: item.length,
+            name: item[0].author,
+            born: author.born,
+          };
+        } else {
+          author = { bookCount: item.length, name: item[0].author };
+        }
+
+        return author;
+      });
     },
   },
   Mutation: {
@@ -167,7 +170,9 @@ const resolvers = {
       const author = authors.find((a) => a.name === args.name);
       if (!author) return null;
       const updatedAuthor = { ...author, born: args.setBornTo };
-      authors = authors.map((a) => (a.name ? updatedAuthor : author));
+      authors = authors.map((a) =>
+        a.name === updatedAuthor.name ? updatedAuthor : a
+      );
       return updatedAuthor;
     },
   },

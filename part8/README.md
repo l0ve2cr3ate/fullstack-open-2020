@@ -75,3 +75,21 @@ mutation {
 ```
 
 If the correct author is found, the operation returns the edited author. If the author is not in the system, null is returned.
+
+Exercises 8.8.-8.12 <br />
+Through these exercises we'll implement a frontend for the GraphQL-library.
+
+8.8: Authors view <br/>
+Implement an Authors view to show the details of all authors on a page.
+
+8.9: Books view <br/>
+Implement a Books view to show on a page all other details of all books except their genres.
+
+8.10: Adding a book <br/>
+Implement a possibility to add new books to your application. Make sure that the Authors and Books views are kept up to date after a new book is added.
+
+8.11: Authors birth year <br />
+Implement a possibility to set authors birth year. You can create a new view for setting the birth year, or place it on the Authors view. Make sure that the Authors view is kept up to date after setting a birth year.
+
+8.12: Authors birth year advanced <br />
+Change the birth year form so that a birth year can be set only for an existing author. Use select-tag, react-select library or some other mechanism.

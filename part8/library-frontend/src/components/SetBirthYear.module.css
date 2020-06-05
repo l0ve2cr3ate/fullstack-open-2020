@@ -1,0 +1,23 @@
+.header {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 2rem;
+}
+
+.form {
+  max-width: 500px;
+}
+
+.inputContainer {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.label {
+  margin-right: 7px;
+  font-size: 14px;
+}
+
+.select {
+  font-size: 14px;
+}

@@ -1,0 +1,19 @@
+.form {
+  margin: 2rem 0;
+}
+
+.inputContainer {
+  margin: 10px 0;
+}
+
+.genreWrapper {
+  display: flex;
+}
+
+.genreBtn {
+  white-space: nowrap;
+}
+
+.genres {
+  margin: 10px 0;
+}

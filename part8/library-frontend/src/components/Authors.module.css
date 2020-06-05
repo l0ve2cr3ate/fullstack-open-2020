@@ -1,0 +1,24 @@
+tbody {
+  line-height: 1.5;
+}
+
+th {
+  text-align: left;
+  color: #5d5c5c;
+  font-weight: 700;
+}
+
+td {
+  padding: 0 25px 0 0;
+  font-size: 14px;
+}
+
+.header {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 2rem;
+}
+
+.bookCount {
+  text-align: center;
+}

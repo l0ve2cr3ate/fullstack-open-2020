@@ -1,8 +1,11 @@
 ### Solutions for part8
 
+The exercises for part8 are divided into subparts. You can find the solutions for the subparts in their respective directories.
+
 ### Excersises part8 library-backend
 
-To start the development server run: `cd part8/library-backend` and then `npm run start-server`
+To start the development backend server run: `cd part8/library-backend` and then `npm run start-server`
+To start frontend run: `cd part8/library-frontend` and then `npm start`
 
 Exercises 8.1.-8.7<br/>
 Through the exercises, we will implement a GraphQL backend for a small library.
@@ -93,3 +96,81 @@ Implement a possibility to set authors birth year. You can create a new view for
 
 8.12: Authors birth year advanced <br />
 Change the birth year form so that a birth year can be set only for an existing author. Use select-tag, react-select library or some other mechanism.
+
+Exercises 8.13.-8.16 <br />
+
+8.13: Database, part 1 <br />
+Change the library application so that it saves the data to a database.
+Let's change the book graphql schema a little
+
+```
+type Book {
+  title: String!
+  published: Int!
+  author: Author!
+  genres: [String!]!
+  id: ID!
+}
+```
+
+so that instead of just the author's name, the book object contains all the details of the author. <br />
+
+You can assume that the user will not try to add faulty books or authors, so you don't have to care about validation errors.
+The following things do not have to work just yet
+
+- allBooks query with parameters
+- bookCount field of an author object
+- author field of a book
+- editAuthor mutation
+
+  8.14: Database, part 2 <br />
+  Complete the program so that all queries (except allBooks with the parameter author ) and mutations work.
+
+  8.15 Database, part 3 <br />
+  Complete the program so that database validation errors (e.g. too short book title or author name) are handled sensibly. This means that they cause UserInputError with a suitable error message to be thrown.
+
+  8.16 user and logging in <br />
+  Add user management to your application. Expand the schema like so:
+
+  ```
+  type User {
+  username: String!
+  favoriteGenre: String!
+  id: ID!
+  }
+  ```
+
+type Token {
+value: String!
+}
+
+type Query {
+// ..
+me: User
+}
+
+type Mutation {
+// ...
+createUser(
+username: String!
+favoriteGenre: String!
+): User
+login(
+username: String!
+password: String!
+): Token
+}
+
+```
+Create resolvers for query me and the new mutations createUser and login. Like in the course material, you can assume all users have the same hardcoded password.
+
+Make the mutations addBook and editAuthor possible only if the request includes a valid token.
+
+
+For more info about graphQL library-backend exercises 8.1.-8.7: <br />
+https://fullstackopen.com/en/part8/graph_ql_server
+For more info about graphQL library-frontend exercises exercises 8.8.-8.12: <br />
+https://fullstackopen.com/en/part8/react_and_graph_ql
+For more info about database and user administration exercises 8.13.-8.16: <br />
+https://fullstackopen.com/en/part8/database_and_user_administration
+```

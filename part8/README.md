@@ -185,6 +185,14 @@ Complete your application to filter the book list by genre. In this exercise the
 8.20 Books by genre, part 2 <br />
 Implement a view which shows all the books based on the logged in user's favourite genre.
 
+8.21 books by genre with GraphQL
+In the previous exercise 8.20, the filtering could have been done using just React. To complete this exercise, you should filter the books in the recommendations page using a GraphQL query to the server. The query created in exercise 8.5 could be useful here.
+
+8.22 Up to date cache and book recommendations
+If you fetch the book recommendations with GraphQL, ensure somehow that the books view is kept up to date. So when a new book is added, the books view is updated at least when a genre selection button is pressed.
+
+When new genre selection is not done, the view does not have to be updated.
+
 For more info about graphQL library-backend exercises 8.1.-8.7: <br />
 https://fullstackopen.com/en/part8/graph_ql_server <br/>
 For more info about graphQL library-frontend exercises exercises 8.8.-8.12: <br />

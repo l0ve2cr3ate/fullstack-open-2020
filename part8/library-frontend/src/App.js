@@ -46,7 +46,7 @@ const App = () => {
               className={styles.menuBtn}
               onClick={() => setPage("recommendations")}
             >
-              recommand
+              recommend
             </Button>
             <Button className={styles.menuBtn} onClick={logout}>
               logout

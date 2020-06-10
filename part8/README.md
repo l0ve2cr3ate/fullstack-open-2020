@@ -118,39 +118,39 @@ so that instead of just the author's name, the book object contains all the deta
 You can assume that the user will not try to add faulty books or authors, so you don't have to care about validation errors.
 The following things do not have to work just yet
 
-- allBooks query with parameters
-- bookCount field of an author object
-- author field of a book
-- editAuthor mutation
+    - allBooks query with parameters
+    - bookCount field of an author object
+    - author field of a book
+    - editAuthor mutation
+    <br/>
 
-  8.14: Database, part 2 <br />
-  Complete the program so that all queries (except allBooks with the parameter author ) and mutations work.
+8.14: Database, part 2 <br />
+Complete the program so that all queries (except allBooks with the parameter author ) and mutations work.
 
-  8.15 Database, part 3 <br />
-  Complete the program so that database validation errors (e.g. too short book title or author name) are handled sensibly. This means that they cause UserInputError with a suitable error message to be thrown.
+8.15 Database, part 3 <br />
+Complete the program so that database validation errors (e.g. too short book title or author name) are handled sensibly. This means that they cause UserInputError with a suitable error message to be thrown.
 
-  8.16 user and logging in <br />
-  Add user management to your application. Expand the schema like so:
+8.16 user and logging in <br />
+Add user management to your application. Expand the schema like so:
 
-  ```
-  type User {
-  username: String!
-  favoriteGenre: String!
-  id: ID!
-  }
-  ```
+```
+type User {
+username: String!
+favoriteGenre: String!
+id: ID!
+}
 
 type Token {
 value: String!
 }
 
 type Query {
-// ..
+  //..
 me: User
 }
 
 type Mutation {
-// ...
+  //..
 createUser(
 username: String!
 favoriteGenre: String!
@@ -160,17 +160,36 @@ username: String!
 password: String!
 ): Token
 }
-
 ```
+
 Create resolvers for query me and the new mutations createUser and login. Like in the course material, you can assume all users have the same hardcoded password.
 
-Make the mutations addBook and editAuthor possible only if the request includes a valid token.
+Make the mutations addBook and editAuthor possible only if the request includes a valid token. <br />
 
+Exercises 8.17.-8.22 <br />
+8.17 Listing books <br/>
+After the backend changes the list of books does not work anymore. Fix it.
+
+8.18 Log in <br />
+Adding new books and changing the birth year of an author do not work because they require user to be logged in.
+
+Implement login functionality and fix the mutations.
+
+It is not necessary yet to handle validation errors.
+
+When a user is logged in, the navigation changes to show the functionalities which can only be done by a logged in user, like add book.
+
+8.19 Books by genre, part 1 <br />
+Complete your application to filter the book list by genre. In this exercise the filtering can be done using just React.
+
+8.20 Books by genre, part 2 <br />
+Implement a view which shows all the books based on the logged in user's favourite genre.
 
 For more info about graphQL library-backend exercises 8.1.-8.7: <br />
-https://fullstackopen.com/en/part8/graph_ql_server
+https://fullstackopen.com/en/part8/graph_ql_server <br/>
 For more info about graphQL library-frontend exercises exercises 8.8.-8.12: <br />
-https://fullstackopen.com/en/part8/react_and_graph_ql
+https://fullstackopen.com/en/part8/react_and_graph_ql <br/>
 For more info about database and user administration exercises 8.13.-8.16: <br />
-https://fullstackopen.com/en/part8/database_and_user_administration
-```
+https://fullstackopen.com/en/part8/database_and_user_administration <br/>
+For more info about login and updating cache exercises Exercises 8.17.-8.22: <br/>
+https://fullstackopen.com/en/part8/login_and_updating_the_cache <br/>

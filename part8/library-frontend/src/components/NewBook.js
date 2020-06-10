@@ -5,7 +5,7 @@ import styles from "./NewBook.module.css";
 import Button from "./Button";
 import Input from "./Input";
 
-const NewBook = (props) => {
+const NewBook = ({ setPage, show }) => {
   const [title, setTitle] = useState("");
   const [author, setAuhtor] = useState("");
   let [published, setPublished] = useState("");
@@ -16,7 +16,7 @@ const NewBook = (props) => {
     refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
   });
 
-  if (!props.show) {
+  if (!show) {
     return null;
   }
 
@@ -25,6 +25,8 @@ const NewBook = (props) => {
 
     published = Number(published);
     createBook({ variables: { title, author, published, genres } });
+
+    setPage("books");
 
     setTitle("");
     setPublished("");

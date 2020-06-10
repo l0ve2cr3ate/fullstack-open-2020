@@ -1,0 +1,11 @@
+.header {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.text {
+  font-size: 14px;
+  margin: 0 0 1rem 0;
+}

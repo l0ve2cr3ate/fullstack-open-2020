@@ -29,10 +29,11 @@ const SetBirthYear = ({ options }) => {
       <h2 className={styles.header}>Set birth year</h2>
       <form className={styles.form} onSubmit={submit}>
         <Select
-          className={styles.select}
           placeholder="Select author..."
+          className={styles.select}
           options={options}
           onChange={({ label }) => setName(label)}
+          value={name ? { label: name, value: name?.toLowerCase() } : null}
         />
         <div className={styles.inputContainer}>
           <label className={styles.label} htmlFor="born">

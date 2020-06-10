@@ -79,7 +79,6 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     me: (root, args, context) => {
-      console.log({ context });
       return context.currentUser;
     },
     bookCount: () => Book.collection.countDocuments(),

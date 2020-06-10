@@ -4,7 +4,7 @@ import { ALL_AUTHORS } from "../queries";
 import SetBirthYear from "./SetBirthYear";
 import styles from "./Authors.module.css";
 
-const Authors = (props) => {
+const Authors = ({ token, show }) => {
   const { loading, error, data } = useQuery(ALL_AUTHORS);
 
   const options = data?.allAuthors?.map((option) => {
@@ -14,7 +14,7 @@ const Authors = (props) => {
     };
   });
 
-  if (!props.show) {
+  if (!show) {
     return null;
   }
   if (loading) return <p>Loading...</p>;
@@ -41,7 +41,7 @@ const Authors = (props) => {
         </tbody>
       </table>
 
-      <SetBirthYear options={options} />
+      {token && <SetBirthYear options={options} />}
     </div>
   );
 };

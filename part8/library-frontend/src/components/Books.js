@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Select from "react-select";
 import { ALL_BOOKS } from "../queries";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import styles from "./Books.module.css";
 
-const Books = (props) => {
-  const [genre, setGenre] = useState("");
+const Books = ({ genre, show, setGenre }) => {
   const { loading, error, data } = useQuery(ALL_BOOKS);
 
   const [getBooks, result] = useLazyQuery(ALL_BOOKS, {
@@ -14,7 +13,7 @@ const Books = (props) => {
 
   useEffect(() => {
     getBooks();
-  }, []); //eslint-disable-line
+  }, [genre, getBooks]);
 
   let genres = data?.allBooks?.flatMap((book) => book.genres);
   // remove duplicates
@@ -40,7 +39,7 @@ const Books = (props) => {
     });
   };
 
-  if (!props.show) {
+  if (!show) {
     return null;
   }
 

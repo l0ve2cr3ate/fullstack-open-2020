@@ -10,6 +10,7 @@ const Recommendations = (props) => {
 
   const { loading, error, data } = useQuery(ALL_BOOKS, {
     variables: { filterByGenre: favoriteGenre },
+    fetchPolicy: "no-cache",
   });
 
   if (!props.show) {
@@ -30,13 +31,22 @@ const Recommendations = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {data?.allBooks?.map((a, i) => (
-            <tr key={`${a.title}-${i}`}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
-              <td>{a.published}</td>
+
+          {data?.allBooks?.length === 0 && !loading ? (
+            <tr>
+              <td>No books found in your favorite genre :(</td>
             </tr>
-          ))}
+          ) : (
+            <>
+              {data?.allBooks?.map((a, i) => (
+                <tr key={`${a.title}-${i}`}>
+                  <td>{a.title}</td>
+                  <td>{a.author.name}</td>
+                  <td>{a.published}</td>
+                </tr>
+              ))}
+            </>
+          )}
         </tbody>
       </table>
     </div>

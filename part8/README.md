@@ -4,7 +4,7 @@ The exercises for part8 are divided into subparts. You can find the solutions fo
 
 ### Excersises part8 library-backend
 
-To start the development backend server run: `cd part8/library-backend` and then `npm run start-server`
+To start the development backend server run: `cd part8/library-backend` and then `npm run start-server` <br/>
 To start frontend run: `cd part8/library-frontend` and then `npm start`
 
 Exercises 8.1.-8.7<br/>
@@ -193,11 +193,44 @@ If you fetch the book recommendations with GraphQL, ensure somehow that the book
 
 When new genre selection is not done, the view does not have to be updated.
 
+Exercises 8.23.-8.26 <br />
+8.23: Subscriptions - server <br />
+Do a backend implementation for subscription bookAdded, which returns the details of all new books to its subscribers.
+
+8.24: Subscriptions - client, part 1 <br />
+Start using subscriptions in the client, and subscribe to bookAdded. When new books are added, notify the user. Any method works. For example, you can use the window.alert function.
+
+8.25: Subscriptions - client, part 2 <br />
+Keep the application's view updated when the server notifies about new books.
+
+8.26: n+1
+Solve the n+1 problem of the following query using any method you like
+
+```query {
+  allAuthors {
+  name
+  bookCount
+  }
+}
+```
+
+Note:
+
+To log mongoose queries:
+
+```javascript
+mongoose.set("debug", (collectionName, method, query, doc) => {
+  console.log(`${collectionName}.${method}`, JSON.stringify(query), doc);
+});
+```
+
 For more info about graphQL library-backend exercises 8.1.-8.7: <br />
 https://fullstackopen.com/en/part8/graph_ql_server <br/>
 For more info about graphQL library-frontend exercises exercises 8.8.-8.12: <br />
 https://fullstackopen.com/en/part8/react_and_graph_ql <br/>
 For more info about database and user administration exercises 8.13.-8.16: <br />
 https://fullstackopen.com/en/part8/database_and_user_administration <br/>
-For more info about login and updating cache exercises Exercises 8.17.-8.22: <br/>
+For more info about login and updating cache exercises 8.17.-8.22: <br/>
 https://fullstackopen.com/en/part8/login_and_updating_the_cache <br/>
+For more info about fragments and subscriptions exercises 8.23-8.26: <br />
+https://fullstackopen.com/en/part8/fragments_and_subscriptions <br />

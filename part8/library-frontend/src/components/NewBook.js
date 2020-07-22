@@ -1,11 +1,19 @@
 import React, { useState } from "react";
-import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from "../queries";
+import { CREATE_BOOK, ALL_AUTHORS } from "../queries";
 import { useMutation } from "@apollo/client";
 import styles from "./NewBook.module.css";
 import Button from "./Button";
 import Input from "./Input";
+import Notification from "./Notification";
 
-const NewBook = ({ setPage, show }) => {
+const NewBook = ({
+  updateCacheWith,
+  setPage,
+  show,
+  setError,
+  errorMessage,
+  resetFilterByGenre,
+}) => {
   const [title, setTitle] = useState("");
   const [author, setAuhtor] = useState("");
   let [published, setPublished] = useState("");
@@ -13,7 +21,17 @@ const NewBook = ({ setPage, show }) => {
   const [genres, setGenres] = useState([]);
 
   const [createBook] = useMutation(CREATE_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+    refetchQueries: [{ query: ALL_AUTHORS }],
+    update: (store, response) => {
+      updateCacheWith(response.data.addBook);
+    },
+    onError: (error) => {
+      setError(error.graphQLErrors[0].message);
+    },
+    onCompleted: () => {
+      setPage("books");
+      resetFilterByGenre(null);
+    },
   });
 
   if (!show) {
@@ -25,8 +43,6 @@ const NewBook = ({ setPage, show }) => {
 
     published = Number(published);
     createBook({ variables: { title, author, published, genres } });
-
-    setPage("books");
 
     setTitle("");
     setPublished("");
@@ -42,6 +58,7 @@ const NewBook = ({ setPage, show }) => {
 
   return (
     <div>
+      <Notification errorMessage={errorMessage} />
       <form className={styles.form} onSubmit={submit}>
         <div className={styles.inputContainer}>
           <label htmlFor="title">title</label>

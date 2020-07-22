@@ -4,15 +4,19 @@ import { LOGIN } from "../queries";
 import Button from "./Button";
 import Input from "./Input";
 import styles from "./LoginForm.module.css";
+import Notification from "./Notification";
 
-const LoginForm = ({ setPage, setToken, show }) => {
+const LoginForm = ({ setPage, setToken, show, setError, errorMessage }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const [login, result] = useMutation(LOGIN, {
-    // onError: (error) => {
-    //   setError(error.graphQLErrors[0].message)
-    // }
+    onError: (error) => {
+      setError(error.graphQLErrors[0].message);
+    },
+    onCompleted: () => {
+      setPage("authors");
+    },
   });
 
   useEffect(() => {
@@ -28,8 +32,6 @@ const LoginForm = ({ setPage, setToken, show }) => {
 
     login({ variables: { username, password } });
 
-    setPage("authors");
-
     setUsername("");
     setPassword("");
   };
@@ -40,6 +42,7 @@ const LoginForm = ({ setPage, setToken, show }) => {
 
   return (
     <div>
+      <Notification errorMessage={errorMessage} />
       <h1 className={styles.header}>Login</h1>
       <form className={styles.form} onSubmit={submit}>
         <div className={styles.inputContainer}>

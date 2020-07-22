@@ -5,9 +5,11 @@ const {
   UserInputError,
   AuthenticationError,
 } = require("apollo-server");
-const { v1: uuid } = require("uuid");
+const DataLoader = require("dataloader");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
+const { PubSub } = require("apollo-server");
+const pubsub = new PubSub();
 
 const Book = require("./models/books");
 const Author = require("./models/authors");
@@ -15,6 +17,20 @@ const User = require("./models/user");
 
 const url = process.env.MONGO_URI;
 const JWT_SECRET = process.env.SECRET;
+
+const batchAuthors = async (keys) => {
+  const authors = await Author.find({
+    _id: {
+      $in: keys,
+    },
+  });
+
+  return keys.map(
+    (key) =>
+      authors.find((author) => author.id == key) ||
+      new Error(`No result for ${key}`)
+  );
+};
 
 mongoose
   .connect(url, {
@@ -43,6 +59,7 @@ const typeDefs = gql`
     name: String!
     bookCount: Int!
     born: Int
+    id: ID!
   }
 
   type User {
@@ -73,6 +90,10 @@ const typeDefs = gql`
       genres: [String]!
     ): Book
     editAuthor(name: String!, setBornTo: Int!): Author
+  }
+
+  type Subscription {
+    bookAdded: Book!
   }
 `;
 
@@ -107,6 +128,7 @@ const resolvers = {
         const books = await Book.find({ genres: { $in: args.genre } }).populate(
           "author"
         );
+
         return books;
       } else {
         return Book.find({}).populate("author");
@@ -115,40 +137,29 @@ const resolvers = {
     allAuthors: async () => {
       const authors = await Author.find({});
 
-      let booksPerAuthor = authors.map(async (author) => {
-        const result = await Book.find({
-          author: { $in: author._id },
-        }).populate("author");
-
-        const authorObject = {
+      const authorsObject = authors.map((author) => {
+        return {
           name: author.name,
           born: author.born,
-          bookCount: result.length,
+          bookCount: author.books.length,
+          id: author.id,
         };
-        return authorObject;
       });
 
-      booksPerAuthor = await Promise.all(booksPerAuthor);
-
-      return booksPerAuthor;
+      return authorsObject;
     },
   },
   Book: {
-    author: async (root) => {
+    author: async (root, args, { loaders }) => {
       const id = root.author;
 
-      const bookCount = await Book.find({ author: { $in: id } })
-        .populate("author")
-        .countDocuments();
-
-      const author = await Author.findById(id);
-
-      if (!author) return;
+      const author = await loaders.author.load(root.author._id);
 
       return {
         name: author.name,
         born: author.born,
-        bookCount,
+        bookCount: author.books.length,
+        id: root.author._id,
       };
     },
   },
@@ -192,18 +203,24 @@ const resolvers = {
 
         if (author) {
           book = new Book({ ...args, author: author._id });
+          author.books = author.books.concat(book._id);
+
           await book.save();
+          await author.save();
         }
 
         if (!author) {
+          const _id = mongoose.Types.ObjectId();
+          book = new Book({ ...args, author: _id });
+
           author = new Author({
             name: args.author,
             born: null,
             bookCount: 1,
-            id: uuid(),
+            _id,
+            books: [book._id],
           });
 
-          book = new Book({ ...args, author: author.id });
           await author.save();
           await book.save();
         }
@@ -212,6 +229,8 @@ const resolvers = {
           invalidArgs: args,
         });
       }
+
+      pubsub.publish("BOOK_ADDED", { bookAdded: book });
 
       return book;
     },
@@ -236,6 +255,11 @@ const resolvers = {
       return author;
     },
   },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"]),
+    },
+  },
 };
 
 const server = new ApolloServer({
@@ -246,11 +270,22 @@ const server = new ApolloServer({
     if (auth && auth.toLowerCase().startsWith("bearer ")) {
       const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
       const currentUser = await User.findById(decodedToken.id);
-      return { currentUser };
+      return {
+        currentUser,
+        loaders: {
+          author: new DataLoader((keys) => batchAuthors(keys)),
+        },
+      };
     }
+    return {
+      loaders: {
+        author: new DataLoader((keys) => batchAuthors(keys)),
+      },
+    };
   },
 });
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`);
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`);
 });

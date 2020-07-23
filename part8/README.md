@@ -214,6 +214,120 @@ Solve the n+1 problem of the following query using any method you like
 }
 ```
 
+### Notes part 8: GraphQL
+
+#### a. GraphQL-server
+
+REST is _resource based_. Every resource had its own address (`/users/10`).
+Operations are done with HTTP requests to the resource's URL. Sometimes you need to do multiple requests to combine data from different resources. This will also return a lot of unnecessary data. GraphQL can handle these kind of situations better.
+
+**Main principle of graphQL**: code on browser forms a _query_ describing wanted data + send it to API with HTTP POST request. All queries in graphQL are sent to same address, and their type is POST.
+
+**Schemas and Queries**
+_Schema_: describes data sent between server and client.
+Example:
+
+```
+type Person {
+  name: String!
+  phone: String
+  street: String!
+  city: String!
+  id: ID!
+}
+```
+
+graphQl has five _scalar_ types:
+
+- Int (32-bit integer)
+- Float (signed double-precision floating point value)
+- String (UTF-8 character-seq)
+- Boolean (true or false)
+- ID: unique identifier
+
+exclamation mark means field is required/non-null.
+
+Query schema type defines what queries client can send to server, what params the queries can have and what kind of data they return. A query can return any field described in the schema.
+
+**Apollo Server**
+_typeDefs_: contains graphQL schema.
+_resolvers_: code which defines how graphQL queries are responded to, and correspond to queries and mutations described in schema.
+
+**Parameters of resolver**
+Resolvers can have four parameters: obj, args, context and info.
+
+- _Obj_: result returned from resolver of the parent field
+- _Args_: contains the parameters of the query
+- _Context_: object shared with all resolvers in a particular query
+- _Info_: contains info about execution state of query
+
+**The default resolver**
+A GraphQl server must define resolvers for _each_ field of each type in the schema. If you don't define resolvers for field, Apollo defines _default resolvers_ for them:
+
+```
+Person : {
+  name: (root) => root.name
+}
+```
+
+**Object within an object**
+
+```
+type Address {
+  street: String!
+  city: String!
+}
+
+type Person {
+  name: String!
+  phone: String
+  address: Address!
+  id: ID!
+}
+```
+
+Objects saved in the Person array on the server don't have the field _address_, so default resolver is not enough.
+
+```
+Person: {
+  address: (root) => {
+    return {
+      street: root.street,
+      city: root.city
+    }
+  }
+}
+```
+
+name, phone, and id are returned by their default resolvers, and the address is formed by the self defined resolver. The _root_ parameter is the person-object.
+
+**Mutations**
+In GraphQL operations which cause a change are done with mutations. Mutations also require resolvers.
+
+**Error handling**
+If you try to perform a mutation with the wrong parameters, the server gives an error. GraphQL validation handles this error, but GraphQL also has an error handling mechanism. _UserInputError_ from `apollo-server` let's you throw errors.
+
+**Enum**
+Enumaration types are a special kind of scalar, restricted to a particular set of allowed values.
+
+**More on queries**
+It's possible to combine multiple field of type Query/separate queries into one query. Combined query can use the same query multiple times if you give alternative names:
+
+```
+query {
+  havePhone: allPersons(phone: YES) {
+    name
+  }
+  phoneless: allPersons(phone: NO) {
+    name
+  }
+}
+```
+
+You can name your queries: `query nameQuery {}`
+
+
+
 Note:
 
 To log mongoose queries:

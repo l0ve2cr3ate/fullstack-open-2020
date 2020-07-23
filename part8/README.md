@@ -413,6 +413,56 @@ When you update details of something in the cache which has an id, the cache wil
 **Apollo Client and the app state** <br>
 When using Apollo, state management libraries like Redux are not needed anymore most of the time.
 
+#### c. Database and user administration
+
+**Mongoose and Apollo**
+In Mongo the identifying field if an object is called \_id and before the name of the field needed to be parsed to id. GraphQL can do it automatically. When using Mongoose with Mongo, resolvers contain code like:
+
+```
+const Person = await Person.findOne(name: args.name)
+```
+
+So the resolvers now return a promise instead of an object. Apollo sends back het value the promise resolves to.
+
+**Validation**
+Input is validated using validations defined in mongoose-schema. For handling validation errors in the schema, you will need to add a try catch block to the save method.
+
+**User and Login**
+You can add _context_ to new AppoloServer. The object returned by context is given to all resolvers as their third param --> great for user identification.
+
+#### d. Login and updating the Cache
+
+**User login (frontend)**
+Store token in application state when user is logged in. If token is undefined, render LoginForm. To login, you need to define a login mutation, and add to token to local storage. The user needs a button so he/she will be able to logout. This logout action will need to reset the token to null, remove the token from localStorage and **reset Apollo Cache**. The cache can be reset using Apollo client _resetStore_ method: `client.resetStore()`. The client can be accessed by `useApolloClient` hook: `const client = useApolloClient()`.
+
+**Adding a token to a header**
+Tokens needs to be send to the backend to be able to add a new book and edit the author.
+
+```
+const authLink = setContext((_, {headers}) => {
+  const token = localStorage.getItem('token)
+
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `bearer ${token}` : null
+    }
+  }
+})
+
+const httpLink = new HttpLink({uri: 'http://localhost:4000'})
+const client = new ApolloClient({
+  cache: new InMemoryCache()
+  link: authLink.concat(httpLink)
+})
+```
+
+`apollo-link-context` needs to be installed. The _link_ parameter of client defines how Apollo connects to the server.
+
+**Updating cache, revisited**
+Cache can be updated by update callback for mutation. The callback function is given a reference to the cache, and the data returned by mutation as params. It is also possible to disable cache for whole app or single query, by setting `fetchPolicy` to `no-cache`.
+Old data in the cache can cause hard to find bugs. Keeping the cache up to date is challenging.
+
 Note:
 
 To log mongoose queries:

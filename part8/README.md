@@ -223,7 +223,7 @@ Operations are done with HTTP requests to the resource's URL. Sometimes you need
 
 **Main principle of graphQL**: code on browser forms a _query_ describing wanted data + send it to API with HTTP POST request. All queries in graphQL are sent to same address, and their type is POST.
 
-**Schemas and Queries**
+**Schemas and Queries** <br />
 _Schema_: describes data sent between server and client.
 Example:
 
@@ -249,11 +249,11 @@ exclamation mark means field is required/non-null.
 
 Query schema type defines what queries client can send to server, what params the queries can have and what kind of data they return. A query can return any field described in the schema.
 
-**Apollo Server**
+**Apollo Server** <br />
 _typeDefs_: contains graphQL schema.
 _resolvers_: code which defines how graphQL queries are responded to, and correspond to queries and mutations described in schema.
 
-**Parameters of resolver**
+**Parameters of resolver** <br>
 Resolvers can have four parameters: obj, args, context and info.
 
 - _Obj_: result returned from resolver of the parent field
@@ -261,7 +261,7 @@ Resolvers can have four parameters: obj, args, context and info.
 - _Context_: object shared with all resolvers in a particular query
 - _Info_: contains info about execution state of query
 
-**The default resolver**
+**The default resolver** <br>
 A GraphQl server must define resolvers for _each_ field of each type in the schema. If you don't define resolvers for field, Apollo defines _default resolvers_ for them:
 
 ```
@@ -270,7 +270,7 @@ Person : {
 }
 ```
 
-**Object within an object**
+**Object within an object** <br>
 
 ```
 type Address {
@@ -301,16 +301,16 @@ Person: {
 
 name, phone, and id are returned by their default resolvers, and the address is formed by the self defined resolver. The _root_ parameter is the person-object.
 
-**Mutations**
+**Mutations** <br>
 In GraphQL operations which cause a change are done with mutations. Mutations also require resolvers.
 
-**Error handling**
+**Error handling** <br>
 If you try to perform a mutation with the wrong parameters, the server gives an error. GraphQL validation handles this error, but GraphQL also has an error handling mechanism. _UserInputError_ from `apollo-server` let's you throw errors.
 
-**Enum**
+**Enum** <br>
 Enumaration types are a special kind of scalar, restricted to a particular set of allowed values.
 
-**More on queries**
+**More on queries** <br>
 It's possible to combine multiple field of type Query/separate queries into one query. Combined query can use the same query multiple times if you give alternative names:
 
 ```
@@ -326,7 +326,92 @@ query {
 
 You can name your queries: `query nameQuery {}`
 
+#### b. React and GraphQL
 
+**Apollo Client** <br>
+The app can communicate with GraphQL server using a _client_ object. By wrapping the App component of the React app in `ApolloProvider` the client will be accessible for all components.
+
+**Making queries** <br>
+
+```
+const ALL_PERSONS = gql`
+  query {
+    allPersons {
+      name
+      phone
+      id
+    }
+  }
+`
+```
+
+in the App component:
+
+```
+const result = useQuery(ALL_PERSONS)
+```
+
+`useQuery` returns an object with properties loading (query has not jet received response), data (response has been received) and error.
+
+**Named queries and variables** <br>
+
+```
+query findPersonByName($nameToSearch: String!) {
+  findPerson(name: $nameToSearch) {
+    //...
+  }
+}
+```
+
+`useQuery` hook --> for situations where query is done when component is rendered. If you want to make a query only when a user wants to see specific data, and the query needs to be done only as required `useLazyQuery` is a good option.
+
+**Cache** <br>
+Query to backend is done only the 1st time. Apollo Client saves responses of queries to cache. If a query is in cache, it's not sent the the server.
+
+**Doing Mutations** <br>
+For mutations `useMutation` hook can be used. Apollo Client can't automatically update the cache of the app, so after a mutation, it still contains the state from before the mutation. You could update the screen by reloading the page, since this empties the cache, but it's not a good solution.
+
+**Updating the Cache** <br>
+
+1. Make the query poll the server/make the query repeatedly:
+
+```
+const result = useQuery(ALL_PERSONS, {
+  pollInterval: 2000
+})
+```
+
+_Advantage:_ <br>
+Simple solution, every time a user adds a new person, it immediately appears on the screens of all users. <br>
+_Disadvantage:_ <br>
+pointless web-traffic
+
+2. use `useMutation` _refetchQueries_ parameter to define that a query is done again after the mutation:
+
+```
+const [createPerson] = useMutation(CREATE_PERSON, {
+  refetchQueries: [{query: ALL_PERSONS}]
+})
+```
+
+_Advantage:_ <br>
+No extra web-traffic <br>
+_Disadvantage:_ <br>
+If one user updates the state of the server, the changes don't show to other users immediately. <br>
+
+**Handling mutation errors** <br>
+We can register an error handler function to the mutation using `useMutations` _onError_ option:
+
+```
+onError: (error) => {
+    setError(error.graphQLErrors[0].message)
+}
+```
+
+When you update details of something in the cache which has an id, the cache will automatically update.
+
+**Apollo Client and the app state** <br>
+When using Apollo, state management libraries like Redux are not needed anymore most of the time.
 
 Note:
 

@@ -463,6 +463,116 @@ const client = new ApolloClient({
 Cache can be updated by update callback for mutation. The callback function is given a reference to the cache, and the data returned by mutation as params. It is also possible to disable cache for whole app or single query, by setting `fetchPolicy` to `no-cache`.
 Old data in the cache can cause hard to find bugs. Keeping the cache up to date is challenging.
 
+#### e. Fragments and subscriptions
+
+**Fragments**
+Some queries returns the same results. To prevent code repetition _fragments_ can be used:
+
+```
+const PERSON_DETAILS = gql`
+  fragment PersonDetails on Person {
+    name
+    phone
+    address {
+      street
+      city
+    }
+  }
+`
+```
+
+The query now looks like:
+
+```
+const ALL_PERONS = `gql
+  query {
+    allPersons {
+      ...PersonDetails
+    }
+  }
+   ${PERSON_DETAILS}
+`
+```
+
+and
+
+```
+query {
+  allPersons {
+    ...PersonDetails
+  }
+}
+```
+
+Fragments are not defined in graphQL schema, but in the client.
+
+**Subscriptions:**
+Let the client _subscribe_ to update about changes in the server. After the app has made a subscription it starts to listen to the server. When changes occur on the server, it sends a notification to its _subscribers_. HTTP-protocol is not suited for communication from server to client. Apollo uses WebSocekts under the hood for server-subscription communication.
+
+**Subscriptions on the Server**
+
+```
+type SubScription {
+  personAdded Person!
+}
+```
+
+personAdded resolver:
+
+```
+const {PubSub} = require('apollo-server')
+const pubsub = new PubSub()
+
+Subscription: {
+  personAdded: {
+    subscribe: () => pubsub.asyncIterator([PERSON_ADDED])
+  }
+}
+```
+
+addPerson resolver needs to be updated:
+`pubsub.publish('PERSON_ADDED', {personAdded: person})`
+
+Communication happens using **publish-subscribe** principle. Adding a new person _publishes_.
+
+**Subscriptions on the Client**
+To use subscriptions on the frontend additional config is needed. `WebSocketLink` needs to be created + `splitLink` is needed for creating the link. Needed packages: `@apollo/link-ws subscriptions-transport-ws`
+There needs to be a HTTP connection + a WebSocket connection to the graphQL server. For subscriptions you can use `useSubscription` hook:
+
+```
+useSubscription(PERSON_ADDED, {
+  onSubscriptionData: ({subscriptionData}) => {
+    //...
+  }
+})
+```
+
+When a new person is added the server sends a notification to the client, and callback function defined in `onSubscriptionData` attribute is called --> add person to Apollo cache, check if not already there:
+
+```
+const updateCacheWith = (addedPerson) => {
+  const includedIn = (set, object) =>
+    set.map(p => p.id).includes(object.id)
+
+  const dataInStore = client.readQuery({
+    query: ALL_PERSONS
+  })
+  if(!includedIn(dataInStore.allPersons, addedPerson)) {
+    client.writeQuery({
+      query: ALL_PERSONS,
+      data: {allPersons: dataInStore.allPersons.concat(addedPerson)}
+    })
+  }
+}
+```
+
+--> call `updateCacheWith(addedPerson)` in `onSubscriptionData` + `update` attribute of createPerson mutation.
+
+**n+1 problem:**
+performance anti-pattern in which an app make N + 1 database calls (N = number of objects fetched).
+Good solutions for n+1 problem depend on situation. Often it requires using a _join_ query instead of multiple separate queries.
+The 4th parameter of the resolver, _info_ can be used to optimize queries, for example if n+1 problem happens only sometimes. `Dataloader` offers a good solution for the n+1 problem.
+
 Note:
 
 To log mongoose queries:

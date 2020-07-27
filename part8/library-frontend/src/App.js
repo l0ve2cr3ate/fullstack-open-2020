@@ -14,7 +14,6 @@ const App = () => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
-  const [genre, setGenre] = useState("");
 
   const client = useApolloClient();
 
@@ -93,7 +92,7 @@ const App = () => {
 
       <Authors token={token} show={page === "authors"} />
 
-      <Books show={page === "books"} genre={genre} setGenre={setGenre} />
+      <Books show={page === "books"} />
 
       <NewBook
         errorMessage={errorMessage}
@@ -101,7 +100,6 @@ const App = () => {
         setPage={setPage}
         show={page === "add"}
         setError={notify}
-        resetFilterByGenre={setGenre}
       />
 
       <LoginForm

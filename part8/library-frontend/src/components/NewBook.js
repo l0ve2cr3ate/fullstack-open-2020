@@ -12,6 +12,8 @@ const NewBook = ({
   show,
   setError,
   errorMessage,
+  resetFilterByGenre,
+  getBooks,
 }) => {
   const [title, setTitle] = useState("");
   const [author, setAuhtor] = useState("");
@@ -29,6 +31,8 @@ const NewBook = ({
     },
     onCompleted: () => {
       setPage("books");
+      resetFilterByGenre(null);
+      getBooks();
     },
   });
 

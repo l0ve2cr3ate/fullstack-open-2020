@@ -1,22 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Select from "react-select";
 import { ALL_BOOKS } from "../queries";
-import { useQuery, useLazyQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import styles from "./Books.module.css";
 
-const Books = ({ show }) => {
-  const [genre, setGenre] = useState("");
+const Books = ({ show, genre, setGenre, getBooks, result }) => {
   const { loading, error, data } = useQuery(ALL_BOOKS);
-
-  const [getBooks, result] = useLazyQuery(ALL_BOOKS, {
-    fetchPolicy: "network-only",
-  });
 
   useEffect(() => {
     getBooks();
   }, []); // eslint-disable-line
-
-  console.log({ genre });
 
   let genres = data?.allBooks?.flatMap((book) => book.genres);
   // remove duplicates
@@ -36,8 +29,6 @@ const Books = ({ show }) => {
   const handleChange = (data) => {
     const label = data?.label;
     setGenre(label);
-
-    console.log({ label });
 
     getBooks({
       variables: { filterByGenre: label },

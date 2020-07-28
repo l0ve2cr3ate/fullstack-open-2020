@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useApolloClient, useSubscription } from "@apollo/client";
+import { useApolloClient, useSubscription, useLazyQuery } from "@apollo/client";
 
 import Authors from "./components/Authors";
 import Books from "./components/Books";
@@ -14,8 +14,13 @@ const App = () => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [genre, setGenre] = useState("");
 
   const client = useApolloClient();
+
+  const [getBooks, result] = useLazyQuery(ALL_BOOKS, {
+    fetchPolicy: "network-only",
+  });
 
   const updateCacheWith = (addedBook) => {
     const includedIn = (set, object) =>
@@ -92,7 +97,13 @@ const App = () => {
 
       <Authors token={token} show={page === "authors"} />
 
-      <Books show={page === "books"} />
+      <Books
+        show={page === "books"}
+        genre={genre}
+        setGenre={setGenre}
+        getBooks={getBooks}
+        result={result}
+      />
 
       <NewBook
         errorMessage={errorMessage}
@@ -100,6 +111,8 @@ const App = () => {
         setPage={setPage}
         show={page === "add"}
         setError={notify}
+        resetFilterByGenre={setGenre}
+        getBooks={getBooks}
       />
 
       <LoginForm

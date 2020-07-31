@@ -2,13 +2,13 @@ interface ExerciseHourResult {
   periodLength: number;
   trainingDays: number;
   success: boolean;
-  rating: number;
-  ratingDescription: string;
+  rating: number | undefined;
+  ratingDescription: string | undefined;
   target: number;
   average: number;
 }
 
-const calculateExercises = (
+export const calculateExercises = (
   exerciseHours: number[],
   target: number
 ): ExerciseHourResult => {
@@ -41,40 +41,3 @@ const calculateExercises = (
     average,
   };
 };
-
-interface ExerciseInputValues {
-  exerciseHours: number[];
-  target: number;
-}
-
-const parseExerciseArguments = (args: Array<string>): ExerciseInputValues => {
-  if (args.length < 4) throw new Error("Not enough arguments");
-
-  const exerciseValues = args.slice(2);
-
-  const notValid = exerciseValues.some((arg) => isNaN(Number(arg)));
-
-  const validArgs = exerciseValues.map((arg) =>
-    !isNaN(Number(arg)) ? Number(arg) : null
-  );
-
-  const target = validArgs.shift();
-
-  const exerciseHours = validArgs;
-
-  if (!notValid) {
-    return {
-      exerciseHours,
-      target,
-    };
-  } else {
-    throw new Error("Provided values were not numbers!");
-  }
-};
-
-try {
-  const { exerciseHours, target } = parseExerciseArguments(process.argv);
-  console.log(calculateExercises(exerciseHours, target));
-} catch (e) {
-  console.log(`Oh no, something went wrong. ${e}`);
-}

@@ -4,6 +4,7 @@ The exercises for part9 are divided into subparts. You can find the solutions fo
 
 ### Excersises part9 body-mass-index
 
+Scripts for part body-mass-index
 To start express server in production mode:
 `cd part9/body-mass-index` <br>
 `npm start` <br>
@@ -191,4 +192,60 @@ In this exercise you might find it beneficial to use the explicit any type when 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ```
 
+### Excersises part9 patientor-backend
+
+Scripts for part patientor-backend <br>
+To start express server in production mode: <br>
+`cd part9/patientor-backend` <br>
+`npm run tsc` (to create build folder) <br>
+`npm start` <br>
+
+To start express server in development mode: <br>
+`cd part9/patientor-backend` <br>
+`npm run dev` <br>
+
+Script for patientor-frontend: <br>
+`cd part9/patientor-frontend` <br>
+`npm start`
+
+Exercises 9.8.-9.9 <br>
+For this set of exercises you will be developing a backend for an existing project called Patientor which is a simple medical record application for doctors who handle diagnoses and basic health information of their patients.
+The frontend has already been built by outsider experts and your task is to create a backend to support the existing code.
+
+9.8: Patientor backend, step1 <br>
+Initialise project that will be used by the frontend. Configure eslint and tsconfig with the same configurations that are used in the material. Define an endpoint that responses to HTTP GET requests to route /ping.
+
+The project should be runnable with npm scripts both in development mode and as compiled code in production mode. <br>
+
+9.9: Patientor backend, step2 <br>
+Fork and clone the project patientor. Start the project with the help of the README file. You should be able to use the frontend without a functioning backend.
+
+Ensure that backend answers to the ping request that frontend has made on startup. Check developer tool to make sure it really works. <br>
+
+Exercises 9.10.-9.11 <br>
+Similarly to Ilari's flight service, we do not use a real database in our app but instead use hardcoded data, that is in the files diagnoses.json and patients.json. Get the files and store those into a directory called data under your project. All data modification can be done in runtime memory, so during this part it is not necessary to write to a file. <br>
+
+9.10: Patientor backend, step3 <br>
+Create a type Diagnose and use it to create endpoint /api/diagnoses for fetching all diagnoses with HTTP GET.
+
+Structure your code properly by using meaningfully named directories and files.
+
+Note that diagnoses may or may not contain the field latin. <br>
+
+9.11: Patientor backend, step4 <br>
+Create data type Patient and set up a GET-endpoint /api/patients that returns all patients to the frontend excluding field ssn. Use a utility type to make sure you are selecting and returning only the wanted fields.
+
+In this exercise you may assume that field gender has type string. <br>
+Try the endpoint with browser and ensure that ssn is not included in the response. <br>
+After creating the endpoint, ensure that the frontend shows the list of patients. <br>
+
+Exercises 9.12.-9.13 <br>
+9.12: Patientor backend, step5 <br>
+Create a POST-endpoint /api/patients for adding patients. Ensure that you can add patients also from the frontend. <br>
+
+9.13: Patientor backend, step6 <br>
+Set up safe parsing, validation and type guards to the POST /api/patients request. <br>
+Refactor the Gender field to use an enum type. <br>
+
 For more info about exercises 9.1-9.7 see: https://fullstackopen.com/en/part9/first_steps_with_typescript
+For more info about exercises 9-8-9.13 see: https://fullstackopen.com/en/part9/typing_the_express_app

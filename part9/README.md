@@ -431,6 +431,27 @@ _Note_ that in order to access the id in the url, you need to give useParams a p
 const { id } = useParams<{ id: string }>();
 ```
 
+9.18: patientor, step3 <br>
+Currently we create the action objects wherever we dispatch the actions, e.g. component App has the following:
+
+```javascript
+dispatch({
+  type: "SET_PATIENT_LIST",
+  payload: patientListFromApi,
+});
+```
+
+Refactor the code to use action creator functions that are all defined in the file reducer.tsx.
+For example the App changes like this:
+
+```javascript
+import { useStateValue, setPatientList } from "./state";
+
+// ...
+
+dispatch(setPatientList(patientListFromApi));
+```
+
 For more info about exercises 9.1-9.7 see: https://fullstackopen.com/en/part9/first_steps_with_typescript
 For more info about exercises 9-8-9.13 see: https://fullstackopen.com/en/part9/typing_the_express_app
 For more info about exercises 9.14-9.17 see: https://fullstackopen.com/en/part9/react_with_types

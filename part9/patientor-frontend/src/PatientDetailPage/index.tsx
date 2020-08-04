@@ -4,7 +4,7 @@ import Axios from "axios";
 import { Icon } from "semantic-ui-react";
 import { Patient } from "../types";
 import { apiBaseUrl } from "../constants";
-import { useStateValue } from "../state";
+import { useStateValue, setPatientDetails } from "../state";
 import styles from "./PatientDetailPage.module.css";
 
 const PatientDetailPage: React.FC = () => {
@@ -18,10 +18,7 @@ const PatientDetailPage: React.FC = () => {
           `${apiBaseUrl}/patients/${id}`
         );
 
-        dispatch({
-          type: "SET_PATIENT_DETAILS",
-          payload: patientDetailsFromApi,
-        });
+        dispatch(setPatientDetails(patientDetailsFromApi));
       } catch (e) {
         console.error(e);
       }

@@ -379,6 +379,58 @@ Then create a component Part that renders all attributes of each type of course 
 
 Lastly, add your own course part interface with at least the following attributes: name, exerciseCount and description. Then add that interface to the type union CoursePart and add corresponding data to the courseParts variable. Now if you have modified your Content component correctly, you should get an error, because you have not yet added support for the fourth course part type. Do the necessary changes to Content, so that all attributes for the new course part also get rendered and that the compiler doesn't produce any errors. <br>
 
+Exercises 9.16.-9.18 <br>
+We will soon add new type Entry for our app that represents a light weight patient journal entry. It consists of journal text i.e. description, creation date, information regarding the specialist who created it and possible diagnosis codes. Diagnosis codes map to the ICD-10 codes returned from the /api/diagnoses endpoint. Our naive implementation will be that a patient has an array of entries. <br>
+
+Before going into this, let us do some preparatory work. <br>
+
+9.16: patientor, step1 <br>
+Create an endpoint `/api/patients/:id` that returns all of the patient information for one patient, including the array of patient entries that is still empty for all the patients. For the time being, expand the backend types as follows:
+
+```javascript
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface Entry {}
+
+export interface Patient {
+  id: string;
+  name: string;
+  ssn: string;
+  occupation: string;
+  gender: Gender;
+  dateOfBirth: string;
+  entries: Entry[];
+}
+
+export type PublicPatient = Omit<Patient, "ssn" | "entries">;
+```
+
+Response should look like:
+
+```javascript
+{
+  name: 'John Doe',
+  ssn: 'kdfjsf',
+  occupation: 'programmer',
+  dateOfBirth: '1985-02-03',
+  gender: 'male',
+  entrie: [],
+  id: 'sadsfsd'
+}
+```
+
+9.17: patientor, step2 <br>
+Create a page for showing a patient's full information in the frontend. <br>
+
+User should be able to access a patient's information e.g by clicking the patient's name. <br>
+
+Fetch the data from the enpoint created in the previous exercise. After fetching the patient information from the backend, add the fetched information to the application's state. Do not fetch the information if it already is in the app state, i.e. if the user is visiting the same patient's information many times.
+Since we now have the state in the context, you'll need to define a new action type for updating an individual patient's data.
+_Note_ that in order to access the id in the url, you need to give useParams a proper type argument:
+
+```javascript
+const { id } = useParams<{ id: string }>();
+```
+
 For more info about exercises 9.1-9.7 see: https://fullstackopen.com/en/part9/first_steps_with_typescript
 For more info about exercises 9-8-9.13 see: https://fullstackopen.com/en/part9/typing_the_express_app
-For more info about exercises 9.14-9.15 see: https://fullstackopen.com/en/part9/react_with_types
+For more info about exercises 9.14-9.17 see: https://fullstackopen.com/en/part9/react_with_types

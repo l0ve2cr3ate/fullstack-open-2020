@@ -21,6 +21,13 @@ const parseName = (name: any): string => {
   return name;
 };
 
+const parseSsn = (ssn: any): string => {
+  if (!isString(ssn)) {
+    throw new Error(`Incorrect ${JSON.stringify(ssn)}`);
+  }
+  return ssn;
+};
+
 const parseDateOfBirth = (dateOfBirth: any): string => {
   if (!dateOfBirth || !isString(dateOfBirth) || !isDate(dateOfBirth)) {
     throw new Error("Incorrect or missing date of birth: " + dateOfBirth);
@@ -47,9 +54,11 @@ const parseGender = (gender: any): Gender => {
 const toNewPatient = (object: any): NewPatient => {
   const newPatient: NewPatient = {
     name: parseName(object.name),
+    ssn: parseSsn(object.ssn),
     dateOfBirth: parseDateOfBirth(object.dateOfBirth),
     occupation: parseOccupation(object.occupation),
     gender: parseGender(object.gender),
+    entries: [],
   };
 
   return newPatient;

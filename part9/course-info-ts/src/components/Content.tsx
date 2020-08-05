@@ -24,20 +24,6 @@ const Content: React.FC<ContentProps> = ({ courseParts }) => {
   });
 
   return <React.Fragment>{parts}</React.Fragment>;
-
-  // return (
-  //   <>
-  //     {courseParts.map((coursePart) => {
-  //       console.log({ coursePart });
-  //       console.log({ part });
-
-  //       // <p key={coursePart.name}>
-  //       //   {coursePart.name} {coursePart.exerciseCount}
-  //       // </p>
-  //       return <Part coursePart={part} />;
-  //     })}
-  //   </>
-  // );
 };
 
 export default Content;

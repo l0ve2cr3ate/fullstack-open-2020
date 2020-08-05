@@ -1,3 +1,7 @@
 .subHeader {
   display: flex;
 }
+
+.entryDescription {
+  font-style: italic;
+}

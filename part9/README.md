@@ -452,6 +452,25 @@ import { useStateValue, setPatientList } from "./state";
 dispatch(setPatientList(patientListFromApi));
 ```
 
+Exercises 9.19.-9.22 <br>
+
+9.19: patientor, step4 <br>
+Define the types OccupationalHealthCareEntry and HospitalEntry so that those conform with the new expanded example data. Ensure that your backend returns the entries properly when you go to a individual patient's route. <br>
+Use types properly in the backend! For now there is no need to do a proper validation for all the fields of the entries in the backend, it is enough e.g. to check that the field type has a correct value. <br>
+
+9.20: patientor, step5 <br>
+Extend a patient's page in the frontend to list the _date, description_ and _diagnose_ codes of the patient's entries. <br>
+
+You can use the same type definition for an Entry in the frontend. For these exercises it is enough just to copy/paste the definitions from the backend to the frontend. <br>
+
+9.21: patientor, step6 <br>
+Fetch and add diagnoses to application state from /api/diagnosis endpoint. Use the new diagnosis data to show the descriptions for patient's diagnosis codes. <br>
+
+9.22: patientor, step7 <br>
+Extend the entry-listing in the patient page to include the Entry's details with a new component that shows rest of the information of the patients entries distinguishing different types from each other.<br>
+You could use eg. Icon or some other SemanticUI component the get appropriate visuals for your listing. <br>
+You should use a switch case based rendering and exhaustive type checking so that no cases can be forgotten.<br>
+
 For more info about exercises 9.1-9.7 see: https://fullstackopen.com/en/part9/first_steps_with_typescript
 For more info about exercises 9-8-9.13 see: https://fullstackopen.com/en/part9/typing_the_express_app
-For more info about exercises 9.14-9.17 see: https://fullstackopen.com/en/part9/react_with_types
+For more info about exercises 9.14-9.21 see: https://fullstackopen.com/en/part9/react_with_types

@@ -2,13 +2,15 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
 import { Icon } from "semantic-ui-react";
-import { Patient } from "../types";
+import { Patient, Entry } from "../types";
 import { apiBaseUrl } from "../constants";
 import { useStateValue, setPatientDetails } from "../state";
 import styles from "./PatientDetailPage.module.css";
+import EntryDetails from "./EntryDetails";
 
 const PatientDetailPage: React.FC = () => {
   const [{ patient }, dispatch] = useStateValue();
+
   const { id } = useParams<{ id: string }>();
 
   React.useEffect(() => {
@@ -50,6 +52,10 @@ const PatientDetailPage: React.FC = () => {
       <div>
         <span>occupation:</span> <span>{patient?.occupation}</span>
       </div>
+      {patient?.entries && patient.entries?.length > 0 && <h3>Entries</h3>}
+      {patient?.entries?.map((entry: Entry) => (
+        <EntryDetails key={entry.id} entry={entry} />
+      ))}
     </section>
   );
 };

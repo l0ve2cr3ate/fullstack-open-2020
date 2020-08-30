@@ -1,6 +1,7 @@
-import patientData from "../../data/patients";
+const shortid = require("shortid");
 
-import { Patient, NewPatient, PublicPatient } from "../types";
+import patientData from "../../data/patients";
+import { Patient, NewPatient, PublicPatient, NewEntry, Entry } from "../types";
 
 const patients: Array<Patient> = patientData;
 
@@ -36,8 +37,21 @@ const addPatient = (patient: NewPatient): Patient => {
   return newPatient;
 };
 
+const addEntry = (patient: Patient, newEntry: NewEntry): Patient => {
+  const id: string = shortid.generate();
+
+  const entryToAdd: Entry = {
+    ...newEntry,
+    id,
+  };
+  patient.entries.push(entryToAdd);
+
+  return patient;
+};
+
 export default {
   getPatients,
   findPatientById,
   addPatient,
+  addEntry,
 };

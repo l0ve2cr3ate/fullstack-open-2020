@@ -1,22 +1,36 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import Axios from "axios";
-import { Icon } from "semantic-ui-react";
+import axios from "axios";
+import { Icon, Button } from "semantic-ui-react";
 import { Patient, Entry } from "../types";
 import { apiBaseUrl } from "../constants";
-import { useStateValue, setPatientDetails } from "../state";
+import { useStateValue, setPatientDetails, addEntry } from "../state";
 import styles from "./PatientDetailPage.module.css";
 import EntryDetails from "./EntryDetails";
+import AddEntryModal from "../AddEntryModal";
+import { EntryFormValues } from "../AddEntryModal/AddEntryForm";
+import {
+  isHealthCheckEntry,
+  isOccupationalHealthcareEntry,
+  isHospitalEntry,
+} from "../utils";
 
 const PatientDetailPage: React.FC = () => {
   const [{ patient }, dispatch] = useStateValue();
+  const [modalOpen, setModalOpen] = React.useState<boolean>(false);
 
   const { id } = useParams<{ id: string }>();
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+  };
 
   React.useEffect(() => {
     const fetchPatientDetails = async () => {
       try {
-        const { data: patientDetailsFromApi } = await Axios.get<Patient>(
+        const { data: patientDetailsFromApi } = await axios.get<Patient>(
           `${apiBaseUrl}/patients/${id}`
         );
 
@@ -41,6 +55,60 @@ const PatientDetailPage: React.FC = () => {
     } else return null;
   };
 
+  const getEntryType = (values: EntryFormValues) => {
+    let type;
+    if (isHealthCheckEntry(values)) {
+      type = "HealthCheck";
+    } else if (isOccupationalHealthcareEntry(values)) {
+      type = "OccupationalHealthcare";
+    } else if (isHospitalEntry(values)) {
+      type = "Hospital";
+    }
+
+    return type;
+  };
+
+  const submitNewEntry = async (values: EntryFormValues) => {
+    let entry;
+    const type = getEntryType(values);
+
+    if (isOccupationalHealthcareEntry(values)) {
+      if (
+        values.sickLeave &&
+        values.sickLeave.startDate !== "" &&
+        values.sickLeave.endDate !== ""
+      ) {
+        entry = { ...values, type };
+      } else {
+        entry = { ...values, type, sickLeave: undefined };
+      }
+    } else if (isHospitalEntry(values)) {
+      if (
+        values.discharge &&
+        values.discharge.date !== "" &&
+        values.discharge.criteria !== ""
+      ) {
+        entry = { ...values, type };
+      } else {
+        entry = { ...values, type, discharge: undefined };
+      }
+    }
+
+    try {
+      const { data: newEntry } = await axios.post<Patient>(
+        `${apiBaseUrl}/patients/${id}/entries`,
+        entry
+      );
+
+      console.log({ newEntry });
+      dispatch(addEntry(newEntry));
+      closeModal();
+    } catch (e) {
+      console.error(e.response.data);
+      // setError(e.response.data.error);
+    }
+  };
+
   return (
     <section>
       <div className={styles.subHeader}>
@@ -56,6 +124,13 @@ const PatientDetailPage: React.FC = () => {
       {patient?.entries?.map((entry: Entry) => (
         <EntryDetails key={entry.id} entry={entry} />
       ))}
+
+      <AddEntryModal
+        modalOpen={modalOpen}
+        onSubmit={submitNewEntry}
+        onClose={closeModal}
+      />
+      <Button onClick={() => openModal()}>Add New Entry</Button>
     </section>
   );
 };

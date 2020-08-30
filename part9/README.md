@@ -471,6 +471,21 @@ Extend the entry-listing in the patient page to include the Entry's details with
 You could use eg. Icon or some other SemanticUI component the get appropriate visuals for your listing. <br>
 You should use a switch case based rendering and exhaustive type checking so that no cases can be forgotten.<br>
 
+Exercises 9.23.-9.27<br>
+9.23: patientor, step8 <br>
+We have established that patients can have different kinds of entries. We don't yet have any way of adding entries to patients in our app, so at the moment it is pretty useless as an electronic medical record. <br>
+
+Your next task is to add an endpoint /api/patients/:id/entries to your backend, through which you can POST an entry for a patient. <br>
+
+Remember that we have different kinds of entries in our app, so our backend should support all those types and check that at least all required fields are given for each type. <br>
+
+9.24: patientor, step9 <br>
+Now that our backend supports adding entries, we want to add the corresponding functionality to the frontend. In this exercise you should add a form for adding an entry to a patient. An intuitive place for accessing the form would be on a patient's page. <br>
+
+In this exercise it is enough to support one entry type, and you do not have to handle any errors. It is enough if a new entry can be created when the form is filled with valid data. <br>
+
+Upon a successful submit the new entry should be added to the correct patient and the patient's entries on the patient page should be updated to contain the new entry. <br>
+
 For more info about exercises 9.1-9.7 see: https://fullstackopen.com/en/part9/first_steps_with_typescript
 For more info about exercises 9-8-9.13 see: https://fullstackopen.com/en/part9/typing_the_express_app
-For more info about exercises 9.14-9.21 see: https://fullstackopen.com/en/part9/react_with_types
+For more info about exercises 9.14-9.22 see: https://fullstackopen.com/en/part9/react_with_types

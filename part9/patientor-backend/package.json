@@ -27,6 +27,7 @@
   "dependencies": {
     "@types/cors": "^2.8.7",
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "shortid": "^2.2.15"
   }
 }

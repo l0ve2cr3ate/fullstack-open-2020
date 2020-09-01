@@ -8,8 +8,9 @@ import {
   DiagnosisSelection,
   NumberField,
 } from "../AddPatientModal/FormField";
-import { NewEntry } from "../types";
+import { NewEntry, HealthCheckRating } from "../types";
 import { useStateValue } from "../state";
+import { isValidDate, isValidHealthCeckValue } from "../utils";
 
 export type EntryFormValues = Omit<NewEntry, "id" | "type">;
 
@@ -36,15 +37,120 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
       onSubmit={onSubmit}
       validate={(values) => {
         const requiredError = "Field is required";
-        const errors: { [field: string]: string } = {};
+        let errors:
+          | { [field: string]: string }
+          | {
+              [key: string]: {
+                [key: string]: string;
+              };
+            } = {};
         if (!values.description) {
           errors.description = requiredError;
+        }
+        if (!isValidDate(values.date)) {
+          errors.date = "Please provide the date in the format YYYY-MM-DD";
         }
         if (!values.date) {
           errors.date = requiredError;
         }
         if (!values.specialist) {
           errors.specialist = requiredError;
+        }
+        if (
+          values.healthCheckRating !== -1 &&
+          !isValidHealthCeckValue(values.healthCheckRating)
+        ) {
+          errors.healthCheckRating =
+            "Please provide a valid health check rating between 0 and 3";
+        }
+        if (
+          values.sickLeave?.startDate &&
+          values.sickLeave?.endDate &&
+          !values.employerName &&
+          values.healthCheckRating === -1
+        ) {
+          errors.employerName = requiredError;
+        }
+
+        if (
+          values.sickLeave?.startDate &&
+          values.sickLeave?.endDate &&
+          values.employerName &&
+          values.healthCheckRating === -1 &&
+          (!isValidDate(values.sickLeave?.startDate) ||
+            !isValidDate(values.sickLeave?.endDate))
+        ) {
+          errors = {
+            ...errors,
+            sickLeave: {
+              startDate:
+                "Please provide start and enddate in YYYY-MM-DD format.",
+            },
+          };
+        }
+
+        if (
+          values.discharge?.date &&
+          !values.employerName &&
+          values.healthCheckRating === -1 &&
+          !isValidDate(values.discharge?.date)
+        ) {
+          errors = {
+            ...errors,
+            discharge: {
+              date: "Please provide a discharge date in YYYY-MM-DD format.",
+            },
+          };
+        }
+
+        if (
+          (values.employerName && values.discharge?.date) ||
+          (values.employerName && values.discharge?.criteria)
+        ) {
+          errors = {
+            ...errors,
+            discharge: {
+              date:
+                "Occupational health entry does not support discharge date and/or criteria. Please remove these values.",
+            },
+          };
+        }
+        if (
+          (values.healthCheckRating !== -1 && values.discharge?.date) ||
+          (values.healthCheckRating !== -1 && values.discharge?.criteria)
+        ) {
+          errors = {
+            ...errors,
+            discharge: {
+              date:
+                "Healthcheck entry does not support discharge date and/or criteria. Please remove these values.",
+            },
+          };
+        }
+        if (
+          (values.healthCheckRating !== -1 && values.sickLeave?.startDate) ||
+          (values.healthCheckRating !== -1 && values.sickLeave?.endDate)
+        ) {
+          errors = {
+            ...errors,
+            sickLeave: {
+              startDate:
+                "Healthcheck entry does not support sickLeave startdate and/or enddate. Please remove these values.",
+            },
+          };
+        }
+        if (
+          (values.employerName &&
+            values.healthCheckRating === HealthCheckRating.Healthy) ||
+          (values.employerName &&
+            values.healthCheckRating === HealthCheckRating.LowRisk) ||
+          (values.employerName &&
+            values.healthCheckRating === HealthCheckRating.HighRisk) ||
+          (values.employerName &&
+            values.healthCheckRating === HealthCheckRating.CriticalRisk)
+        ) {
+          errors.employerName =
+            "HealthCheck entry does not support employername. Please remove this value if you want to add a healthcheck entry.";
         }
         return errors;
       }}

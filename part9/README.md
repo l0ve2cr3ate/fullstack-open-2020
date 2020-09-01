@@ -486,6 +486,17 @@ In this exercise it is enough to support one entry type, and you do not have to 
 
 Upon a successful submit the new entry should be added to the correct patient and the patient's entries on the patient page should be updated to contain the new entry. <br>
 
+9.25: patientor, step10 <br>
+Extend your solution so that it displays an error message if some required values are missing or formatted incorrectly. <br>
+
+9.26: patientor, step11 <br>
+Extend your solution so that it supports two entry types and displays an error message if some required values are missing or formatted incorrectly. You do not need to care about the possible errors in the server's response. <br>
+
+9.27: patientor, step12 <br>
+Extend your solution so that it supports all the entry types and displays an error message if some required values are missing or formatted incorrectly. You do not need to care about the possible errors in the server's response. <br>
+
+The easiest but surely not the most elegant way to do this exercise is to have a separate form for each different entry type. Getting the types to work properly might be a slight challenge if you use just a single form.
+
 For more info about exercises 9.1-9.7 see: https://fullstackopen.com/en/part9/first_steps_with_typescript
 For more info about exercises 9-8-9.13 see: https://fullstackopen.com/en/part9/typing_the_express_app
-For more info about exercises 9.14-9.22 see: https://fullstackopen.com/en/part9/react_with_types
+For more info about exercises 9.14-9.27 see: https://fullstackopen.com/en/part9/react_with_types

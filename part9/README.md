@@ -534,6 +534,45 @@ _Compiling_ means code is transformed from human readable format to machine read
 - Sometimes type inference needs assistance.
 - Mysterious type errors.
 
+#### b. First steps with Typescript
+
+Because TS code is not executable by itself, it has to be compiled to JS. During the build step TS code is compiled into JS into a separate folder. The production environment rund the code from that folder. In development instead of a build step real-time compilation can be used for faster development experience.
+`ts-node` compiles and executes TS file, so a separate compilation step is not needed. If you use `ts-node` through `package.json`, all commandline args for the script need to be prefixed with `--`: <br>
+`npm run ts-node -- file.ts` <br>
+
+**Creating Your Own Types**
+
+```typescript
+type Operation = "multiply" | "add" | "divide";
+```
+
+Using the OR operation | you can define a variable to accept multiple values by creating a _union type_.
+The _type_ keyword defines a new name for a type, a _type alias_.
+
+**@types/{npm-packages}**
+Types for most packages can be found from `@types/package` and are maintained by _Definetly Typed_.
+An npm package can also include its types within the code, so installing the types won't be necessary. <br>
+
+**Note:** Typings are only used before compilation and not needed in production build. They should _always_ be in the _dev-dependencies_. <br>
+
+`NaN` is of type number, so if you want to prevent a variable being `NaN` typescript can't help with its number type. You can validate commandline arguments like so: <br>
+`!isNaN(Number(args[2]))` <br>
+
+_Interface_ keyword: way to define the 'shape' an object should have. <br>
+
+**More about tsconfig** <br>
+`tsconfig.json` file contains core config on how TS should work in the project. You can define how strict TS should inspect your code, what file to include or exclude and where compiled files should be placed. <br>
+
+**Adding Express to the mix** <br>
+`req` and `res` parameters should be typed. When using `import from 'express'` and installing the types for express, the editor knows types, but not when using require syntax. If param is unused, prefix with `_`:
+instead of `req` use `_req`. <br>
+
+`ts-node-dev` is alternative to nodemon. Only meant to be used in development, and enables auto reloading (by taking care of compilation on every change). <br>
+
+**The horrors of any**
+In TS every untyped variable which's type cannot be infered becomes implicitely any type. Implicit any typings are usually considered problematic, since it's often the result of someone forgetting to assign types --> `noImplicitAny` rule prevents this. <br>
+eslint can prevent from using any type by `disallow explicit any`.
+
 For more info about exercises 9.1-9.7 see: https://fullstackopen.com/en/part9/first_steps_with_typescript
 For more info about exercises 9-8-9.13 see: https://fullstackopen.com/en/part9/typing_the_express_app
 For more info about exercises 9.14-9.27 see: https://fullstackopen.com/en/part9/react_with_types

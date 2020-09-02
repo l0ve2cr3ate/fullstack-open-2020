@@ -497,6 +497,43 @@ Extend your solution so that it supports all the entry types and displays an err
 
 The easiest but surely not the most elegant way to do this exercise is to have a separate form for each different entry type. Getting the types to work properly might be a slight challenge if you use just a single form.
 
+### Notes part 9: Typescript
+
+#### a. Background and intro
+
+Typescript: programming language designed for large scale JS development.
+
+**Main Principle** <br>
+Typescript is a typed superset of JS and it is compiled into plain JS. It includes all features of JS + additional features.<br>
+
+Typescript consists of three parts:
+
+- language: syntax, keywords & type annotations
+- compiler: responsible for type info erasure & code transformation
+- language service: collects type info from source code
+
+_Compiling_ means code is transformed from human readable format to machine readable format. In typescript human readable code is transformed into other human readable code, called _transpiling_, but it is often called _compiling_. The compiler also performs static code analysis. <br>
+
+**Typescript key language features**: <br>
+
+- _Type Annotations_: lightweight way to record intended _contract_ of a function/variable.
+- _Structural Typing_: in structural typing two elements are considered to be compatible with eachother if for each feature within the type of the first element a corresponding and identical feature exists within the type of the second element.
+- _Type inference_: TS (Typescript) compiler can attempt to infer type info.
+- _Type Erasure_: TS removes all type system constructs during compilation. No type info remains at runtime.
+
+**Why should one use TS?** <br>
+
+- Type checking and static code analysis --> can reduce runtime errors + amount of unit tests needed.
+- Type annotations can function as a type of code level documentation (which is always up-to-date).
+- IDEs can provide more specific & smarter intellisense when they know exactly what types of data is being processed.
+
+**What does TS not fix?** <br>
+
+- TS type annotations and type checking exist only on compile time, not on runtime.
+- Incomplete, invalid or missing types in external libraries.
+- Sometimes type inference needs assistance.
+- Mysterious type errors.
+
 For more info about exercises 9.1-9.7 see: https://fullstackopen.com/en/part9/first_steps_with_typescript
 For more info about exercises 9-8-9.13 see: https://fullstackopen.com/en/part9/typing_the_express_app
 For more info about exercises 9.14-9.27 see: https://fullstackopen.com/en/part9/react_with_types

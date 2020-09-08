@@ -786,6 +786,309 @@ const diaryEntries: DiaryEntry[] = data.map((obj) => {
 
 Enums are usually used when there is a set of predetermined values which are not expected to change in the future (like weekdays). <br>
 
-For more info about exercises 9.1-9.7 see: https://fullstackopen.com/en/part9/first_steps_with_typescript
-For more info about exercises 9-8-9.13 see: https://fullstackopen.com/en/part9/typing_the_express_app
-For more info about exercises 9.14-9.27 see: https://fullstackopen.com/en/part9/react_with_types
+#### d. React with Types
+
+TS can help catch errors:
+
+- trying to pass extra/unwanted prop to component
+- forgetting to pass required prop to component
+- pass prop of wrong type to component <br>
+
+**Create React App with TS** <br>
+`npx create-react-app my-app --template typescript` <br>
+Instead of .js and .jsx files, app now uses .ts and .tsx files, with some type annotations + tsconfig.json file in root directory. <br>
+`allowJS: true` --> handy for if you are in the process of transforming JS project into TS. <br>
+React components return `JSX.Element` or `null`, so eslint `explicit-func-return-type` rule needs to be disabled. <br>
+For the linting script to parse .tsx files: <br>
+`"lint": "eslint './scr/**/.{ts,tswx}'"` <br>
+
+**React components with TS** <br>
+In React you add a type for the component: `React.FunctionComponent` or `FC` alias is called a _generic_ type (<> after typename). You can pass it a type as argument. <br>
+
+```typescript
+type FC<P = {}> = FunctionComponent<P>; // --> FC is type alias for FunctionComponent interface
+
+interface FunctionComponent<P = {}> {
+  (props: PropsWithChildren<P>, context?: any): React.Element | null;
+  propTypes?: WeakValidationMap<P>;
+  contextTypes?: ValidationMap<any>;
+  defaultProps?: partial<P>;
+  displayName?: string;
+}
+```
+
+`P = {}` means you can pass type as argument. The received type will be named P and is an ampty object by default. Props has generic type `PropsWithChildren`. Type `PropsWithChildren` is an _intersection_ of `P` and type `{ children?: ReactNode }`: <br>
+`type PropsWithChildren<P> = P | { children?: ReactNode }` <br>
+
+```typescript
+interface WelcomeProps {
+  name: string;
+}
+
+const Welcome: React.FC<WelcomeProps> = (props) => {
+  return <h1>Hello, {props.name}</h1>
+};
+
+// or
+
+const Welcome: React.FC<{name: string}> =({name}) => {
+  ...
+}
+```
+
+React linting rules in create-react-app expect use of prop-types. To turn this rule off add: <br>
+`rules: { "react/prop-types": 0 }` to .eslintrc. <br>
+
+**Deeper Type Usage** <br>
+What if you had different course parts which would share part of their properties, like name, but also would have additional different properties (for example one has a property exercise submissionlink, but the others don't). You could create separate types for these course parts and create a union with all these types: <br>
+
+`type CoursePart = CoursePartOne | CoursePartTwo | CoursePartThree` <br>
+
+But this solution has a lot of duplicate type info. Solution: Identify attributes all course parts have in common. Define base type for it. Than extend base type to create specific type for parts.
+
+```typescript
+interface CoursePartBase {
+  name: string;
+  exerciseCount: number;
+}
+
+interface CoursePartOne extends CoursePartBase {
+  name: "Fundamentals";
+  description: string;
+}
+```
+
+You can use these types using a _switch_ statement:
+
+```typescript
+courseParts.forEach(part => {
+  switch(part.name) {
+    case 'Fundamentals':
+      // TS knows this has attributes name, exerciseCount and description
+      break;
+      ...
+  }
+})
+```
+
+_Exhaustive type checking_: if you encounter an unexpected value, a function gets called that accepts a value with the type _never_ and has return type never. <br>
+Helper function for exhaustive type checking: <br>
+
+```typescript
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+  );
+};
+```
+
+In the default block of your switch statement: <br>
+
+```typescript
+  default:
+    return assertNever(part)
+```
+
+Never type represents type of values that never occur. If you would have a course part which would not be handled by one of the switch cases, it would go to the default case and give an error: `CoursePart ... not assignable to parameter of type 'never'` --> you are using a variable where it should never be used. <br>
+
+**A note about defining object types** <br>
+In most cases you can use either _type_ or _interface_. There are some differences however: If you define multiple interfaces with the same name, they will result in a _merged_ interface. Defining multiple types with the same name will result in an error. TS docs recommend using interfaces in most cases. <br>
+
+**Working with an existing codebase** <br>
+Start by reading the README and take a look at package.json. Start app and click around to check if dev environment is functioning. Try looking at the types. Take a look at the tests. <br>
+
+**State Handling** <br>
+For small apps `useContext` and `useReducer` can be used to handle state. Redux would be overkill. The context can be used to share global data like authenticated user or theme.
+Context can have a tuple containing app state and dispatcher for changing state. <br>
+
+```typescript
+export type state = { patients: { [id: string]: Patient } };
+```
+
+The state is an object with one key patients, which has a _directory_ (object with string keys), and with a Patient object as values. <br>
+When a type is declared like the type for patients, TS does not actually have a way of knowing if the key you are trying to access does exist or not.
+
+```typescript
+const myPatient = state.patients["non-existing-id"];
+console.log(myPatient.name); // --> no TS error because TS thinks myPatient is of type Patient
+```
+
+Fix:
+
+```typescript
+const type State = {
+  patients: { [id: string]: Patient | undefined };
+}
+const myPatient = state.patients['non-existing-id']
+console.log(myPatient.name) // --> TS error: Object possibly 'undefined'
+```
+
+This type of additional security is good to implement if you use data from external resources or use user input. A more type strict way would be to use `Map objects`, to which you can declare a type for both key and content. The Map's accessor function `get()` always returns a union of the declared value type and undefined, so TS automatically requires you to perform validity check of the data retrieved from the map: <br>
+
+```typescript
+interface State {
+  patients: Map<string, Patient>;
+}
+
+const myPatient = state.patients.get("non-existing-id");
+console.log(myPatient.name); // --> TS error: Object possibly 'undefined'
+console.log(myPatient?.name); // --> valid code, will log 'undefined'
+```
+
+State manipulation can be done using a reducer. The action will look like: <br>
+
+```typescript
+export type Action =
+  | {
+      type: "SET_PATIENT_LIST";
+      payload: Patient[];
+    }
+  | {
+      type: "ADD_PATIENT";
+      payload: Patient;
+    };
+```
+
+The reducer: <br>
+
+```typescript
+const reducer = (state: State, action: Action): State => {
+  switch(action.type) {
+    case 'SET_PATIENT_LIST':
+      return {
+        ...state,
+        patients: {
+          ...action.payload.reduce((memo, patient) => {
+            ...memo, [patient.id]: patient
+          }),
+          ...state.patients
+        }
+      }
+    case 'ADD_PATIENT':
+      return {
+        ...state,
+        patients: {
+          ...state.patients,
+          [action.payload.id]: action.payload
+        }
+      }
+    default:
+      return state;
+  }
+}
+```
+
+In the `state.ts` file a state and dispatch function is created, and context is set up with context provider: <br>
+
+```typescript
+const [state, dispatch] = useReducer(reducer, initialState);
+```
+
+```typescript
+<StateContext.Provider value={[state, dispatch]}>
+  {children}
+</StateContext.Provider>
+```
+
+The `StateContext.Provider` makes state and dispatch functions available to all components by wrapping the App in it: <br>
+
+```typescript
+<StateProvider reducer={reducer}>
+  <App />
+</StateProvider>
+```
+
+```typescript
+const useStateValue = () => useContext(StateContext);
+```
+
+The `useStateValue` hooks can be used like: <br>
+
+```typescript
+const [{ patients, dispatch }] = useStateValue();
+```
+
+in components, to access the state. <br>
+
+The App fetches data from backend using axios. Validation functions/type guards or a validation library can be used to validate the data.
+
+```typescript
+const fetchPatients = async () => {
+  try {
+    const { data: patients } = await axios.get<Patient[]>(
+      `${apiBaseUrl}/patients`
+    )
+    dispatch({ type: 'SET_PATIENT_LIST', payload: patients })
+  }
+} // --> in useEffect
+```
+
+**WARNING**: passing type parameter to axios will not validate any data. <br>
+
+**Full entries** <br>
+There are three kind of entries:
+
+- OccupationalHealthCare
+- Hospital
+- HealthCheck.
+
+The BaseEntry type can be extended by the type mentioned above. Id, description, date and specialist are shared by all entries. diagnosisCodes in optional property. <br>
+
+```typescript
+interface BaseEntry {
+  id: string;
+  description: string;
+  date: string;
+  specialist: string;
+  diagnosisCodes?: Array<Diagnoses["code"]>;
+}
+```
+
+Entries of type HealthCheck contain HealthCheckRating field (integer from 0-3) --> enum: <br>
+
+```typescript
+export enum HealthCheckRating {
+  "Healthy" = 0,
+  "LowRisk" = 1,
+  "HighRisk" = 2,
+  "CriticalRisk" = 3,
+}
+
+interface HealthCheckEntry extends BaseEntry {
+  type: "HealthCheck";
+  healthCheckRating: HealthCheckRating;
+}
+
+export type Entry =
+  | HospitalEntry
+  | OccupationalHealthCareEntry
+  | HealthCheckEntry;
+```
+
+**Add Patient Form** <br>
+Formik helps with handling forms in React. It helps with:
+
+- getting values in and out of form state
+- validation and error messages
+- handling form submission <br>
+
+The patient form values are typed as a version of Patient type, without id (which comes from the backend) and entries (only for existing patients):
+
+```typescript
+export type PatientFormValues = Omit<Patient, "id" | "entries">;
+```
+
+The props of the FormComponent are typed as: <br>
+
+```typescript
+interface Props {
+  onSubmit: (values: PatientFormValues) => void;
+  onCancel: () => void;
+}
+```
+
+`onSubmit` sends HTTP POST request to server and adds patient returned from backend to app state. <br><br>
+
+For more info about exercises 9.1-9.7 see: https://fullstackopen.com/en/part9/first_steps_with_typescript <br>
+For more info about exercises 9-8-9.13 see: https://fullstackopen.com/en/part9/typing_the_express_app <br>
+For more info about exercises 9.14-9.27 see: https://fullstackopen.com/en/part9/react_with_types <br>

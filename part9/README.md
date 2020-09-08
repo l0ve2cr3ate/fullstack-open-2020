@@ -569,9 +569,222 @@ instead of `req` use `_req`. <br>
 
 `ts-node-dev` is alternative to nodemon. Only meant to be used in development, and enables auto reloading (by taking care of compilation on every change). <br>
 
-**The horrors of any**
+**The horrors of any** <br>
 In TS every untyped variable which's type cannot be infered becomes implicitely any type. Implicit any typings are usually considered problematic, since it's often the result of someone forgetting to assign types --> `noImplicitAny` rule prevents this. <br>
 eslint can prevent from using any type by `disallow explicit any`.
+
+#### c. Typing the Express App
+
+**Setting up the project** <br>
+TS's native `tsc` compiler can help you initialize your project: <br>
+`npm run tsc -- --init` --> will help initialize tsconfig.json. arguments before -- are interpreted for the command npm and after are for the command that is run through the script <br>
+
+- add `tsc: tsc` script in `package.json` <br>
+
+`tsconfig.json`:
+
+- target: tells compiler which ECMAscript version to use for generated JS.
+- outDir: where compiled code should be placed.
+- module: commonjs --> can use require syntax.
+- strict: shorthand for `noImplicitAny, noImplicitThis, alwaysStrict, etc.` --> suggested by official docs.
+- esModuleInterop: allows interoperability between commonJS and ESModules.
+
+For dev environment you can use `nodemon + ts-node`, `ts-node-dev` or other option. <br>
+For production build use TS compiler: <br>
+`npm run tsc` --> creates native runnable JS production build in build directory. <br>
+With `.eslintignore` you can prevent that build directory will be linted. <br>
+Script to run app in production mode: <br>
+`start: node build/index.js` <br>
+
+**Implementing the functionality** <br>
+Place source code in src directory to separate it from config files. Routers are modules responsible for handling a set of specific resources, which can be placed in `src/routes` directory. <br>
+Data manipulation is handled by a *service\*\*. The *business logic\** from the router code is separated into its own modules called *services\* in the `src/services` directory. Here fetching and saving data will be handled. <br>
+
+To be able to import JSON data you will need to add: <br>
+`resolveJsonModule: true` into `tsconfig` <br>
+
+Types will be stored in `types.ts`. <br>
+
+_Type assertion_: when you are certain a variable has a certain type but TS failed to infer correct type -->
+`as string` --> only when there is no other solution. <br>
+
+JSON files can't be typed. If you want to type JSON data you will need to change json file to ts file. Now data can be interpreted correctly and type assertion won't be necessary. <br>
+
+Optional field on interface: <br>
+
+```typescript
+interface Props {
+  something?: string;
+}
+```
+
+add `?` to type declaration to make the field optional. <br>
+
+**Node amd JSON Modules**
+When using `resolveJSONModule` option in tsconfig you have to be aware that node will try to resolve modules in order of extensions: ['js', 'json', 'node', 'ts', 'tsx'] <br>
+If you have a flat folder structure like: <br>
+
++-- myModule.json <br>
++-- myModule.ts <br>
+
+if you want to import myModule and have `resolveJSONModule` option set to true in tsconfig `.json` file extension takes precedence over `.ts` so `myModule.json` will be imported instead of `myModule.ts`. To avoid bugs in flat file directories give each file with a valid node module extension a unique name. <br>
+
+**Utility types** <br>
+`Pick` utility type allows you to choose which fields of existing type you will want to use. It can be used to construct a new type or to inform a function what it should return on runtime. <br>
+`Omit` utility type can be used to exclude fields from type. But you will have to be aware that TS only checks for the required fields. Excess fields are not prohibited. But if you will try to access a field TS is not aware off it, so it's not possible to access it. To prevent leaking of unwanted fields, you'll have to exclude the fields yourself. <br>
+
+**Preventing accidental undefined results** <br>
+Fetching one specific entry from backend with HTTP GET request to `api/diaries/:id` --> <br>
+
+```typescript
+const findById = (id: number): DiaryEntry => {
+  const entry = diaries.find((d) => d.id === id);
+  return entry;
+};
+```
+
+--> above function could return undefined when id is not found --> change return type of the function to `DiaryEntry | undefined`: <br>
+
+```typescript
+const findById = (id: number): DiaryEntry | undefined => {
+  const entry = diaries.find((d) => d.id === id);
+  return entry;
+};
+```
+
+**Adding a new diary** <br>
+POST request for adding a new dairy: <br>
+
+```typescript
+router.post('/', req, res) => {
+  const { date, weather, visibility, comment } = req.body;
+  const newDiaryEntry = diaryService.addEntry(
+    date,
+    weather,
+    visibility,
+    comment
+  );
+  res.json(newDiaryEntry)
+}
+
+const addEntry = (date: string, weahter: Weahter, visibility: Visibility, comment: string): DiaryEntry => {
+  const newDiaryEntry = {
+    id: Math.max(...diaries.map(d => d.id)) + 1,
+    date,
+    weather,
+    visibility,
+    comment
+  }
+  diaries.push(newDiaryEntry);
+  return newDiaryEntry;
+}
+```
+
+--> above code is hard to read because all the params are typed separately. Possible solution: send all params as one object to addDiary function --> what is the type of the object? --> DiaryEntry with missing id field: <br>
+
+```typescript
+export type NewDiaryEntry = Omit<DiaryEntry, "id">;
+```
+
+addDiary function now becomes: <br>
+
+```typescript
+const addDiary = (entry: NewDiaryEntry): DiaryEntry => {
+  const newDiaryEntry = {
+    id: Math.max(...diaries.map((d) => d.id)) + 1,
+    ...entry,
+  };
+};
+```
+
+To parse incoming data json middleware is needed: <br>
+`app.use(express.json)` <br>
+
+**Proofreading requests** <br>
+Express handles parsing request body by asserting any type to all body fields. If you want to use these fields, check the incoming values. You can add parsing and validation logic to utils.ts:
+
+```typescript
+const toNewDiaryEntry = (object: any): NewDiaryEntry => {
+  const newEntry: NewDiaryEntry = ...
+
+  const isString(text: any): text is string => {
+    return typeof text === 'string' || text instanceof String
+  }
+
+  const parseComment (comment: any): string => {
+    if(!comment | !isString(comment)) {
+      throw new Error('Incorrect or missing comment:', comment)
+    }
+    return comment
+  }
+
+}
+```
+
+The `isString` function in the code above is a _type guard_: a function which returns a boolean and which has a _predicate_ as return type. The general form of a type guard predicate is: <br>
+`parameterName is Type` <br>
+
+There are two different ways to create string objects in JS:
+
+```javascript
+const stringPrimitive = "String Primitive";
+const stringObject = new "String object"();
+typeof stringPrimitive; // --> string
+typeof stringObject; // --> object
+stringPrimitive instanceof String; // --> false
+objectPrimitive instanceof String; // --> true
+```
+
+TS does not have a date type --> treat it like string: <br>
+
+```typescript
+const isDate = (date: string): boolean => {
+  return Boolean(Date.parse(date));
+};
+
+const parseDate = (date: any): string => {
+  if (!date || !isString(date) || !isDate(date)) {
+    throw new Error("Incorrect or missing date", date);
+  }
+
+  return date;
+};
+```
+
+How to validate a string is a specific form? One way would be:
+
+```typescript
+const isWeahter = (str: any): str is Weather => {
+  return ['sunny', 'cloudy', ...].includes(str)
+}
+```
+
+Problem: List of possible weathers does not stay in sync with the type definition if the type is altered.
+Solution: enum: <br>
+
+```typescript
+export enum Weahter {
+  Sunny = 'sunny',
+  Cloudy = 'cloudy',
+  ...
+}
+
+const isWeather = (param: any): param is Weather => {
+  return object.values(Weather).includes(param)
+}
+```
+
+--> now the data does not conform to types anymore, because you cannot assume a string is an enum. Fix: map initial data elements to DiaryEntry type with toDiaryEntry function: <br>
+
+```typescript
+const diaryEntries: DiaryEntry[] = data.map((obj) => {
+  const object = toNewDiaryEntry(obj) as DiaryEntry;
+  object.id = obj.id;
+  return obj;
+});
+```
+
+Enums are usually used when there is a set of predetermined values which are not expected to change in the future (like weekdays). <br>
 
 For more info about exercises 9.1-9.7 see: https://fullstackopen.com/en/part9/first_steps_with_typescript
 For more info about exercises 9-8-9.13 see: https://fullstackopen.com/en/part9/typing_the_express_app

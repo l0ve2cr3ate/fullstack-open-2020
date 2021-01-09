@@ -22,15 +22,16 @@ https://fullstackopen.com/en
 - GraphQL
 - Typescript
 - React Native
+- CI/CD (Continuous Integration/Continuous Delivery/Continuous Deployment)
 
-### 11 Parts
-The course consists of part 0 - 10, each with a different subject. A separate review for part 10 React Native can be found [here](https://github.com/l0ve2cr3ate/rate-repository-app/blob/master/README.md#course-review-part-10-react-native).
+### 12 Parts
+The course consists of part 0 - 11, each with a different subject. A separate review for part 10 React Native can be found [here](https://github.com/l0ve2cr3ate/rate-repository-app/blob/master/README.md#course-review-part-10-react-native). The separate review for part 11 CI/CD can be read [here](https://github.com/l0ve2cr3ate/fullstack-open-part11-bloglist#course-review-part-11-fullstack-open)
 
 ### Time Commitment
 Estimated time for completing one course part is one week (15-20 hours). Some parts will take longer than others, and your previous experience will also determine how fast you will be able to complete the exercises. The course is self-paced, you can work through the course material at your own pace. The course material is setup to be completed one part at a time.
 
 ### Course Certificate
-You can earn a certificate if you complete and submit the course exercises before 10 January 2021. Next year a new version of this course will probably start.
+You can earn a certificate if you complete and submit the course exercises before 15 February 2021. The 2021 edition of the course will start 15 March 2021.
 
 ### Course Content
 #### Part 0 - Fundamentals of web apps
@@ -102,8 +103,11 @@ In part 9 you will learn how to setup your Typescript project. You will use Type
 - patientor backend: medical record app for doctors who handle diagnoses and basic health info of patients.
 - patientor frontend
 
-Part 10 React Native
+#### Part 10 React Native
 For part 10 I did write a separate review, you can find it [here](https://github.com/l0ve2cr3ate/rate-repository-app/blob/master/README.md#course-review-part-10-react-native)
+
+#### Part 11 CI/CD
+Part 11 has a separate review, you can find it [here](https://github.com/l0ve2cr3ate/fullstack-open-part11-bloglist#course-review-part-11-fullstack-open)
 
 ### High Quality Course Content
 This course is a university course and contains the same content as the Fullstack Open course at the University of Helsinki in spring 2020. Students with a Finnish social security number can earn 3-9 credits for the course. 
@@ -128,7 +132,7 @@ At the moment the course was being created create-react-app probably did not yet
 
 ### Summary
 
-I would recommand this course if you satisfy the [requirements](#prerequisits), want to go through some high quality course material and put in the effort to complete the exercises. 
+I would recommend this course if you satisfy the [requirements](#prerequisits), want to go through some high quality course material and put in the effort to complete the exercises. 
 If you love getting certificates, you are in the right place. If you expect video content, this course in NOT for you. If you expect a walktrough about how to build a certain app, this course is NOT for you.
 
 

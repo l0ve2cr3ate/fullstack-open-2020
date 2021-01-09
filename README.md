@@ -25,7 +25,7 @@ https://fullstackopen.com/en
 - CI/CD (Continuous Integration/Continuous Delivery/Continuous Deployment)
 
 ### 12 Parts
-The course consists of part 0 - 11, each with a different subject. A separate review for part 10 React Native can be found [here](https://github.com/l0ve2cr3ate/rate-repository-app/blob/master/README.md#course-review-part-10-react-native). The separate review for part 11 CI/CD can be read [here](https://github.com/l0ve2cr3ate/fullstack-open-part11-bloglist#course-review-part-11-fullstack-open)
+The course consists of part 0 - 11, each with a different subject. A separate review for part 10 React Native can be found [here](https://github.com/l0ve2cr3ate/rate-repository-app/blob/master/README.md#course-review-part-10-react-native). The separate review for part 11 CI/CD can be read [here](https://github.com/l0ve2cr3ate/fullstack-open-part11-bloglist#course-review-part-11-fullstack-open).
 
 ### Time Commitment
 Estimated time for completing one course part is one week (15-20 hours). Some parts will take longer than others, and your previous experience will also determine how fast you will be able to complete the exercises. The course is self-paced, you can work through the course material at your own pace. The course material is setup to be completed one part at a time.

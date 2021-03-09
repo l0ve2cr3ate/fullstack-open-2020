@@ -45,7 +45,7 @@ const mostBlogs = (blogs) => {
   // Return array with name of author with most blogs and amount of blogs.
   const authorWithMostBlogsArray = Object.entries(
     countBlogsByAuthor,
-  ).reduce((a, b) => (countBlogsByAuthor[a] > countBlogsByAuthor[b] ? a : b))
+  ).reduce((a, b) => (countBlogsByAuthor[a[0]] > countBlogsByAuthor[b[0]] ? a : b))
 
   const authorWithMostBlogs = {
     author: authorWithMostBlogsArray[0],

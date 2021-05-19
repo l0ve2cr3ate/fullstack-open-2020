@@ -7,6 +7,9 @@ In order to run the code, run the following 2 commands:
 
 You can find the deployed app here: https://phonebook-backend-2020.herokuapp.com/
 
+**Note**
+If you want to run the app using json webserver instead of the phonebook backend, you should change the baseUrl in the `services` folder to `http://localhost:3001/api/persons`, and start jsonwebserver with `npm run server` command.
+
 Exercises of part2 are divided in subparts. You can find the solutions for every subpart in their respective folder.
 
 ### Exercise part2 phonebook
